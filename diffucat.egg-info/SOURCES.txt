@@ -1,0 +1,10 @@
+pyproject.toml
+diffucat.egg-info/PKG-INFO
+diffucat.egg-info/SOURCES.txt
+diffucat.egg-info/dependency_links.txt
+diffucat.egg-info/top_level.txt
+src/__init__.py
+src/core/__init__.py
+src/core/config.py
+src/core/logger.py
+tests/test_core.py

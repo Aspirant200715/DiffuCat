@@ -1,0 +1,27 @@
+project:
+  name: "DiffuCat_MVP"
+  version: "0.1.0"
+  seed: 42
+
+paths:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  checkpoints: "checkpoints"
+  logs: "logs"
+
+model:
+  gnn:
+    hidden_channels: 64
+    num_filters: 32
+    num_interactions: 4
+    num_gaussians: 50
+    dropout: 0.1
+  uncertainty:
+    mc_samples: 20
+    kappa: 1.5  # UCB exploration weight (PDF: Sec 2 - Active Learning)
+
+training:
+  batch_size: 4
+  epochs: 150
+  lr: 1.0e-3
+  device: "auto"  # auto, cuda, cpu

@@ -1,0 +1,13 @@
+# Core AI & Chemistry
+torch>=2.2.0
+torch-geometric>=2.5.0
+rdkit>=2023.9.1
+
+# Config & Validation
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+PyYAML>=6.0.1
+
+# Testing & Dev
+pytest>=7.4.0
+pytest-cov>=4.1.0
