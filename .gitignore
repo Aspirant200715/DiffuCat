@@ -1,18 +1,178 @@
-# Virtual environment
+# ==================== PYTHON ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# ==================== VIRTUAL ENVIRONMENTS ====================
 .venv/
 venv/
+ENV/
 env/
+env.bak/
+venv.bak/
 
-# Python cache
-__pycache__/
-*.pyc
-
-# Logs
-*.log
-
-# OS files
-.DS_Store
-
-# IDE
+# ==================== IDE & EDITORS ====================
+# VS Code
 .vscode/
+*.code-workspace
+.history/
+# PyCharm
 .idea/
+*.iml
+*.ipr
+*.iws
+# Sublime
+*.sublime-project
+*.sublime-workspace
+# Jupyter
+.ipynb_checkpoints/
+
+# ==================== OS FILES ====================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+# Linux
+*~
+.fuse_hidden*
+.trash-*
+.nfs*
+
+# ==================== ML & CHECKPOINTS ====================
+# Model weights & checkpoints
+*.pth
+*.pt
+*.ckpt
+*.bin
+*.onnx
+*.pb
+checkpoints/
+!checkpoints/.gitkeep
+# TensorBoard logs
+runs/
+# MLflow
+mlruns/
+*.mlmodel
+# DVC
+.dvc/
+*.dvc
+**/cache/
+**/cache/*
+!data/.gitkeep
+!checkpoints/.gitkeep
+
+# ==================== DATA (LARGE/SENSITIVE) ====================
+# Raw data (should be downloaded, not committed)
+data/raw/*
+!data/raw/.gitkeep
+# Processed data (can be regenerated)
+data/processed/*
+!data/processed/.gitkeep
+# Large datasets
+*.h5
+*.hdf5
+*.parquet
+*.feather
+*.arrow
+
+# ==================== LOGS & TEMP ====================
+logs/
+*.log
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ==================== SECRETS & CONFIGS ====================
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+*.secret
+*.key
+*.pem
+# API keys, passwords, tokens
+config/secrets.yaml
+configs/credentials.yaml
+# AWS/Azure/GCP credentials
+.aws/
+.azure/
+.gcp/
+boto.cfg
+
+# ==================== DOCKER & K8S ====================
+# Docker
+docker-compose.override.yml
+*.dockerignore
+# Kubernetes
+*.kubeconfig
+kubeconfig
+
+# ==================== DOCUMENTATION ====================
+# Build outputs
+docs/_build/
+site/
+# Local docs
+*.pdf
+*.docx
+*.pptx
+
+# ==================== NOTEBOOKS (OPTIONAL) ====================
+# Keep notebooks out of main branch; use /notebooks/ for experiments
+notebooks/*.ipynb
+!notebooks/.gitkeep
+# Jupyter server info
+*.ipynb_checkpoints/
+
+# ==================== TESTING ====================
+# Coverage reports
+coverage.xml
+coverage.json
+# Hypothesis
+.hypothesis/
+
+# ==================== PROJECT-SPECIFIC ====================
+# DiffuCat artifacts
+*.pdb  # RDKit temporary files
+conformer_*.sdf  # RDKit conformer exports
+*.xyz  # Quantum chemistry outputs (unless small)
+*.log  # ORCA/Gaussian/VASP logs (large)
+*.out  # Job scheduler outputs
+*.err  # Error logs from HPC jobs
+# Temporary visualization exports
+viz_*.png
+viz_*.html
