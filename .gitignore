@@ -130,13 +130,13 @@ runs/
 mlruns/
 *.mlflow/
 
-# DVC (Data Version Control)
-.dvc/
-*.dvc
-**/cache/
-**/cache/*
-!data/.gitkeep
-!checkpoints/.gitkeep
+# ==================== DVC (Data Version Control) ====================
+# .dvc/ directory and *.dvc files contain METADATA and MUST be tracked by Git
+# Only ignore the actual data cache and temporary files
+.dvc/cache/
+.dvc/tmp/
+*.dvc.tmp
+
 
 # ==================== DATA (LARGE/SENSITIVE) ====================
 # Raw data (should be downloaded via scripts, not committed)

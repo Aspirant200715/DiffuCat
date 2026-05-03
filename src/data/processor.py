@@ -1,110 +1,112 @@
 # src/data/processor.py
 import torch
-from torch_geometric.data import Data
-from rdkit import Chem
-from rdkit.Chem import AllChem
-from typing import List, Optional
 import numpy as np
+from rdkit import Chem
+# ✅ FIX: Explicitly import RDKit submodules
+from rdkit.Chem import rdDistGeom
+from rdkit.Chem import rdForceFieldHelpers
+from rdkit.Chem import rdMolDescriptors
+from typing import List, Optional
+from torch_geometric.data import Data
 from src.core.config import DiffuCatConfig
 from src.core.logger import setup_logger
 
 logger = setup_logger("data.processor")
 
 class MoleculeGraphProcessor:
-    """Converts SMILES to validated 3D PyG graphs for SE(3)-equivariant models."""
+    """
+    Converts SMILES strings into 3D PyTorch Geometric graphs.
+    Handles conformer generation, feature extraction, and graph construction.
+    """
     
     def __init__(self, cfg: DiffuCatConfig):
         self.cfg = cfg
-        self.logger = logger
-        self._ensure_dirs()
-
-    def _ensure_dirs(self) -> None:
-        from pathlib import Path
-        Path(self.cfg.paths_data_processed).mkdir(parents=True, exist_ok=True)
+        self.seed = cfg.seed if hasattr(cfg, 'seed') else 42
 
     def smiles_to_mol(self, smiles: str) -> Optional[Chem.Mol]:
-        """Parse SMILES, add explicit hydrogens, sanitize."""
-        try:
-            mol = Chem.MolFromSmiles(smiles)
-            if mol is None:
-                self.logger.warning(f"Invalid SMILES syntax: {smiles}")
-                return None
-            # Add Hs & sanitize (catches valency/valence errors)
-            mol = Chem.AddHs(mol)
-            Chem.SanitizeMol(mol)
-            return mol
-        except Exception as e:
-            self.logger.error(f"Sanitization failed for '{smiles}': {e}")
-            return None
+        """Convert SMILES to RDKit Mol object."""
+        mol = Chem.MolFromSmiles(smiles)
+        if mol is None:
+            logger.warning(f"Invalid SMILES: {smiles}")
+        return mol
 
     def generate_3d_conformer(self, mol: Chem.Mol) -> Optional[Chem.Mol]:
-        """Generate 3D coordinates with MMFF energy minimization."""
+        """Generate 3D coordinates using ETKDG v3."""
+        mol = Chem.AddHs(mol)
         try:
-            # ETKDG v3 is state-of-the-art for conformer generation
-            params = AllChem.ETKDGv3()
-            params.randomSeed = 42
-            params.useRandomCoords = True
-            success = AllChem.EmbedMolecule(mol, params)
+            # ✅ FIX: Use rdDistGeom directly
+            params = rdDistGeom.ETKDGv3()
+            params.randomSeed = self.seed
+            params.useSmallRingTorsions = True
+            params.useMacrocycleTorsions = True
             
-            if success != 0:
-                self.logger.warning(f"Conformer embedding failed for {Chem.MolToSmiles(mol)}")
+            # Generate conformer
+            conf_id = rdDistGeom.EmbedMolecule(mol, params)
+            if conf_id == -1:
+                logger.warning("Failed to embed molecule")
                 return None
                 
-            # Quick MMFF optimization to relax steric clashes
-            AllChem.MMFFOptimizeMolecule(mol)
+            # Optimize geometry
+            # ✅ FIX: Use rdForceFieldHelpers
+            rdForceFieldHelpers.MMFFOptimizeMolecule(mol)
+            
             return mol
         except Exception as e:
-            self.logger.error(f"3D generation failed: {e}")
+            logger.warning(f"Failed to generate 3D conformer: {e}")
             return None
 
-    def mol_to_graph(self, mol: Chem.Mol, y: Optional[torch.Tensor] = None) -> Optional[Data]:
-        """Convert RDKit mol to PyG Data object with SE(3)-ready tensors."""
-        try:
-            if not mol.GetNumConformers():
-                return None
+    def mol_to_graph(self, mol: Chem.Mol) -> Data:
+        """Convert RDKit Mol to PyG Data object with 3D positions."""
+        # Get atomic numbers
+        z = torch.tensor([atom.GetAtomicNum() for atom in mol.GetAtoms()], dtype=torch.long)
+        
+        # Get 3D positions
+        conf = mol.GetConformer()
+        pos = torch.tensor(conf.GetPositions(), dtype=torch.float)
+        
+        # Get edges (adjacency matrix)
+        adj = Chem.GetAdjacencyMatrix(mol)
+        edge_index = torch.from_numpy(np.array(adj.nonzero())).long()
+        
+        # Edge attributes (bond type)
+        bond_types = []
+        for i, j in zip(edge_index[0], edge_index[1]):
+            bond = mol.GetBondBetweenAtoms(int(i), int(j))
+            if bond is not None:
+                bond_types.append(float(bond.GetBondTypeAsDouble()))
+            else:
+                bond_types.append(1.0)  # Default to single
+        
+        edge_attr = torch.tensor(bond_types, dtype=torch.float).unsqueeze(1)
+        
+        return Data(z=z, pos=pos, edge_index=edge_index, edge_attr=edge_attr)
 
-            # Node features: atomic numbers (SchNet standard)
-            z = torch.tensor([a.GetAtomicNum() for a in mol.GetAtoms()], dtype=torch.long)
-            
-            # 3D positions (required for equivariant message passing)
-            pos = torch.tensor(mol.GetConformer().GetPositions(), dtype=torch.float32)
-            
-            # Edge construction from bonds
-            edge_index, edge_attr = [], []
-            for bond in mol.GetBonds():
-                i, j = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
-                edge_index.extend([[i, j], [j, i]])  # Undirected
-                # Bond order as continuous feature (1.0=single, 1.5=aromatic, 2.0=double, 3.0=triple)
-                bt = float(bond.GetBondTypeAsDouble())
-                edge_attr.extend([bt, bt])
-
-            edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
-            edge_attr = torch.tensor(edge_attr, dtype=torch.float32).view(-1, 1)
-
-            data = Data(z=z, pos=pos, edge_index=edge_index, edge_attr=edge_attr)
-            if y is not None:
-                data.y = y.float()
-            return data
-        except Exception as e:
-            self.logger.error(f"Graph conversion failed: {e}")
-            return None
-
-    def process_batch(self, smiles_list: List[str], targets: Optional[List[float]] = None) -> List[Data]:
-        """Batch process SMILES → validated 3D graphs."""
-        graphs = []
+    def process_batch(self, smiles_list: List[str], targets: Optional[List[List[float]]] = None) -> List[Data]:
+        """
+        Process a list of SMILES into a list of PyG Data objects.
+        ✅ Stores SMILES string in graph.smiles attribute for scaffold splitting.
+        """
+        data_list = []
         for i, smi in enumerate(smiles_list):
             mol = self.smiles_to_mol(smi)
-            if mol is None: 
+            if mol is None:
                 continue
+                
             mol_3d = self.generate_3d_conformer(mol)
-            if mol_3d is None: 
+            if mol_3d is None:
                 continue
-
-            y = torch.tensor([targets[i]]) if targets else None
-            graph = self.mol_to_graph(mol_3d, y=y)
-            if graph is not None:
-                graphs.append(graph)
-
-        success_rate = len(graphs) / len(smiles_list) if smiles_list else 0
-        self.logger.info(f"Processed {len(graphs)}/{len(smiles_list)} molecules ({success_rate:.1%} success)")
-        return graphs
+                
+            graph = self.mol_to_graph(mol_3d)
+            
+            # ✅ CRITICAL FIX: Store SMILES string in graph object
+            graph.smiles = smi 
+            
+            # Add target labels if provided
+            if targets is not None:
+                graph.y = torch.tensor(targets[i], dtype=torch.float)
+                
+            data_list.append(graph)
+            
+        success_rate = len(data_list) / max(len(smiles_list), 1) * 100
+        logger.info(f"Processed {len(data_list)}/{len(smiles_list)} molecules ({success_rate:.1f}% success)")
+        return data_list

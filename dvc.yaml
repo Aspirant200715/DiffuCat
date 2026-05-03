@@ -1,27 +1,31 @@
 # dvc.yaml
-# Defines the Data Processing Pipeline for DiffuCat
+# Defines the Data Processing Pipeline for DiffuCat (MVP Version)
 # PDF Alignment: MLOps & Deployment - DVC for data versioning
+#
+# Note: Download stage removed for MVP; manually place CSV in data/raw/
+# Production: Re-add download stage with real URLs/checksums
 
 stages:
-  download:
-    cmd: python scripts/download_data.py
-    # deps: [] # Uncomment when adding external source files
-    outs:
-      - data/raw/catalysts.csv
+  # download:  # ← Commented out for MVP
+  #   cmd: python scripts/download_data.py catbench_small --output data/raw
+  #   outs:
+  #     - data/raw/catalysts.csv
 
   process:
-    cmd: python scripts/process_data.py
+    cmd: python scripts/process_data.py --input data/raw --output data/processed
     deps:
-      - data/raw/catalysts.csv
+      - data/raw/catalysts.csv  # ← Must exist manually for MVP
       - src/data/loaders.py
       - src/data/processor.py
+      - scripts/process_data.py
     outs:
       - data/processed/full_dataset.pt
 
   split:
-    cmd: python scripts/split_data.py
+    cmd: python scripts/split_data.py --input data/processed/full_dataset.pt --output data/processed/splits
     deps:
       - data/processed/full_dataset.pt
       - src/data/splitters.py
+      - scripts/split_data.py
     outs:
       - data/processed/splits/
