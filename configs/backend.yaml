@@ -1,0 +1,33 @@
+api:
+  title: "DiffuCat API"
+  description: "Uncertainty-Aware Catalyst Discovery Platform"
+  version: "0.2.0"
+  host: "0.0.0.0"
+  port: 8000
+  docs_url: "/docs"
+  redoc_url: "/redoc"
+
+auth:
+  jwt_secret: "change-me-in-production"  # Use env var in prod
+  jwt_algorithm: "HS256"
+  access_token_expire_minutes: 30
+  refresh_token_expire_days: 7
+
+database:
+  # For MVP: SQLite for simplicity; Phase 7: PostgreSQL
+  url: "sqlite:///./diffucat_mvp.db"
+  echo: false
+
+redis:
+  url: "redis://localhost:6379/0"
+  cache_ttl_seconds: 300
+
+lab:
+  mock_mode: true  # MVP: use mock; set false + configure for real lab
+  opentrons_api_url: "http://localhost:3000"  # Phase 6.3
+  timeout_seconds: 300
+
+logging:
+  level: "INFO"
+  format: "json"  # Structured logs for audit trail
+  file: "logs/api.log"

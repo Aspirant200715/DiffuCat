@@ -1,8 +1,17 @@
 # ==================== PYTHON ====================
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+
+# C extensions
+*.pyd
+*.pyo
+*.pyd
+_PyTest__/
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -20,14 +29,28 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+pip-wheel-metadata/
+
+# Pytest
 .pytest_cache/
-.mypy_cache/
 .coverage
 htmlcov/
 .tox/
 .nox/
 
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+!notebooks/README.md
+!notebooks/.gitkeep
+
 # ==================== VIRTUAL ENVIRONMENTS ====================
+# Virtual environments (local development)
 .venv/
 venv/
 ENV/
@@ -35,21 +58,34 @@ env/
 env.bak/
 venv.bak/
 
+# Conda
+conda-env.yml
+environment.yml
+
 # ==================== IDE & EDITORS ====================
 # VS Code
 .vscode/
 *.code-workspace
 .history/
-# PyCharm
+*.log
+
+# PyCharm / IntelliJ
 .idea/
 *.iml
 *.ipr
 *.iws
-# Sublime
+*.swp
+*.swo
+*~
+
+# Sublime Text
 *.sublime-project
 *.sublime-workspace
-# Jupyter
-.ipynb_checkpoints/
+
+# Eclipse
+.project
+.settings/
+.classpath
 
 # ==================== OS FILES ====================
 # Windows
@@ -58,11 +94,16 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 *.lnk
+*.msi
+*.exe
+
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
 ._*
+.Finder-*
+
 # Linux
 *~
 .fuse_hidden*
@@ -70,21 +111,26 @@ $RECYCLE.BIN/
 .nfs*
 
 # ==================== ML & CHECKPOINTS ====================
-# Model weights & checkpoints
+# Model weights & checkpoints (large, reproducible via training)
 *.pth
 *.pt
 *.ckpt
 *.bin
 *.onnx
 *.pb
+*.tflite
+*.mlmodel
 checkpoints/
 !checkpoints/.gitkeep
+
 # TensorBoard logs
 runs/
+
 # MLflow
 mlruns/
-*.mlmodel
-# DVC
+*.mlflow/
+
+# DVC (Data Version Control)
 .dvc/
 *.dvc
 **/cache/
@@ -93,86 +139,180 @@ mlruns/
 !checkpoints/.gitkeep
 
 # ==================== DATA (LARGE/SENSITIVE) ====================
-# Raw data (should be downloaded, not committed)
+# Raw data (should be downloaded via scripts, not committed)
 data/raw/*
 !data/raw/.gitkeep
+
 # Processed data (can be regenerated)
 data/processed/*
 !data/processed/.gitkeep
-# Large datasets
+
+# Large datasets (use DVC or download scripts)
 *.h5
 *.hdf5
 *.parquet
 *.feather
 *.arrow
+*.npz
+*.npy
+*.csv
+!data/small_test.csv
 
 # ==================== LOGS & TEMP ====================
+# Application logs
 logs/
 *.log
+log/
+
+# Temporary files
 tmp/
 temp/
 *.tmp
 *.temp
+*.bak
 *.swp
 *.swo
 *~
 
 # ==================== SECRETS & CONFIGS ====================
-# Environment variables & secrets
+# Environment variables & secrets (NEVER commit these)
 .env
 .env.local
 .env.*.local
 *.secret
 *.key
 *.pem
-# API keys, passwords, tokens
+*.crt
+*.p12
+
+# API keys, passwords, tokens (use env vars or secret managers)
 config/secrets.yaml
 configs/credentials.yaml
+configs/auth.json
+
 # AWS/Azure/GCP credentials
 .aws/
 .azure/
 .gcp/
 boto.cfg
+google-cloud-key.json
 
 # ==================== DOCKER & K8S ====================
-# Docker
+# Docker (keep Dockerfile, ignore override/compose local)
 docker-compose.override.yml
 *.dockerignore
-# Kubernetes
+docker-compose.local.yml
+
+# Kubernetes (ignore local configs, keep templates)
 *.kubeconfig
 kubeconfig
+k8s/local-*
+k8s/*-local.yaml
 
 # ==================== DOCUMENTATION ====================
-# Build outputs
+# Sphinx / MkDocs build outputs
 docs/_build/
 site/
-# Local docs
+build/html/
+
+# Local documentation exports
 *.pdf
 *.docx
 *.pptx
-
-# ==================== NOTEBOOKS (OPTIONAL) ====================
-# Keep notebooks out of main branch; use /notebooks/ for experiments
-notebooks/*.ipynb
-!notebooks/.gitkeep
-# Jupyter server info
-*.ipynb_checkpoints/
+*.key
 
 # ==================== TESTING ====================
 # Coverage reports
 coverage.xml
 coverage.json
+.coverage.*
+
 # Hypothesis
 .hypothesis/
 
-# ==================== PROJECT-SPECIFIC ====================
-# DiffuCat artifacts
-*.pdb  # RDKit temporary files
-conformer_*.sdf  # RDKit conformer exports
-*.xyz  # Quantum chemistry outputs (unless small)
-*.log  # ORCA/Gaussian/VASP logs (large)
-*.out  # Job scheduler outputs
-*.err  # Error logs from HPC jobs
-# Temporary visualization exports
+# ==================== PROJECT-SPECIFIC: DIFFUCAT ====================
+# RDKit temporary files
+*.pdb
+conformer_*.sdf
+*.xyz
+*.mol2
+
+# Quantum chemistry outputs (large, use DVC)
+*.out
+*.err
+*.log
+vasp.out
+vasp.err
+gaussian.log
+orca.log
+*.wfn
+*.wfx
+*.fchk
+*.molden
+
+# ASE / FireWorks / Prefect job files
+job_*/
+fireworks_*/
+prefect_*/
+
+# Visualization exports (large images)
 viz_*.png
 viz_*.html
+viz_*.svg
+renders/
+
+# Synthetic data generated during development
+data/synthetic_*.csv
+data/demo_*.json
+
+# ==================== FRONTEND (if added later) ====================
+# Node modules
+node_modules/
+bower_components/
+jspm_packages/
+
+# NPM/Yarn
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# ==================== BACKUP & ARCHIVE ====================
+# Backup files
+*.backup
+*.bak
+*.old
+*.orig
+
+# Archive files (unless intentional)
+*.zip
+*.tar.gz
+*.rar
+!releases/
+
+# ==================== GIT ====================
+# Merge conflict markers (should never be committed)
+
+# ==================== RECOMMENDED: Keep These Tracked ====================
+# ! = explicitly track despite patterns above
+!README.md
+!CONTRIBUTING.md
+!LICENSE
+!requirements/
+!configs/default.yaml
+!configs/backend.yaml.example
+!src/
+!tests/
+!scripts/
+!docker/Dockerfile
+!docker/docker-compose.yml
+!k8s/deployment.yaml.example
+!notebooks/.gitkeep
+!data/.gitkeep
+!checkpoints/.gitkeep

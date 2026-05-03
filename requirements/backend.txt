@@ -1,0 +1,22 @@
+# FastAPI & ASGI Server
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Authentication & Security (updated)
+python-jose[cryptography]>=3.3.0
+bcrypt>=4.0.1  # ✅ Native bcrypt, no passlib
+python-multipart>=0.0.6
+
+# API Testing
+httpx>=0.26.0
+pytest-asyncio>=0.23.0
+
+# Database & Cache
+asyncpg>=0.29.0
+redis[hiredis]>=5.0.0
+
+# WebSocket
+websockets>=12.0
+
+# PDF/Report Generation
+reportlab>=4.0.0
