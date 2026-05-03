@@ -1,0 +1,27 @@
+# dvc.yaml
+# Defines the Data Processing Pipeline for DiffuCat
+# PDF Alignment: MLOps & Deployment - DVC for data versioning
+
+stages:
+  download:
+    cmd: python scripts/download_data.py
+    # deps: [] # Uncomment when adding external source files
+    outs:
+      - data/raw/catalysts.csv
+
+  process:
+    cmd: python scripts/process_data.py
+    deps:
+      - data/raw/catalysts.csv
+      - src/data/loaders.py
+      - src/data/processor.py
+    outs:
+      - data/processed/full_dataset.pt
+
+  split:
+    cmd: python scripts/split_data.py
+    deps:
+      - data/processed/full_dataset.pt
+      - src/data/splitters.py
+    outs:
+      - data/processed/splits/
