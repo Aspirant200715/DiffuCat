@@ -1,0 +1,59 @@
+{
+  "engine": "mock",
+  "candidates_count": 4,
+  "results_count": 4,
+  "validations": [
+    {
+      "smiles": "c1ccccc1",
+      "status": "completed",
+      "energy_ev": -6.945683347497208,
+      "properties": {
+        "homo_lumo_gap_ev": 4.151442660496828,
+        "dipole_moment_debye": 4.89031979288132,
+        "polarizability_au": 18.079623138784356,
+        "method": "MockDFT/B3LYP/6-31G*",
+        "basis_set": "6-31G*"
+      },
+      "error": null
+    },
+    {
+      "smiles": "CCO",
+      "status": "completed",
+      "energy_ev": -6.31009079285864,
+      "properties": {
+        "homo_lumo_gap_ev": 1.7379653705467724,
+        "dipole_moment_debye": 2.270972743949205,
+        "polarizability_au": 13.843637245255522,
+        "method": "MockDFT/B3LYP/6-31G*",
+        "basis_set": "6-31G*"
+      },
+      "error": null
+    },
+    {
+      "smiles": "CC(=O)O",
+      "status": "completed",
+      "energy_ev": -5.921047826874077,
+      "properties": {
+        "homo_lumo_gap_ev": 3.171905240339031,
+        "dipole_moment_debye": 3.174729182361942,
+        "polarizability_au": 11.565117208815751,
+        "method": "MockDFT/B3LYP/6-31G*",
+        "basis_set": "6-31G*"
+      },
+      "error": null
+    },
+    {
+      "smiles": "NCCO",
+      "status": "completed",
+      "energy_ev": -6.745779430060647,
+      "properties": {
+        "homo_lumo_gap_ev": 2.307357001489236,
+        "dipole_moment_debye": 4.491101327039505,
+        "polarizability_au": 16.603987725860915,
+        "method": "MockDFT/B3LYP/6-31G*",
+        "basis_set": "6-31G*"
+      },
+      "error": null
+    }
+  ]
+}
