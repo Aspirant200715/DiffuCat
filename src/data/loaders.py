@@ -80,7 +80,7 @@ class CatalystDataset(Dataset):
         """Load pre-processed graphs from disk."""
         processed_path = os.path.join(self.root, "processed", "dataset.pt")
         if os.path.exists(processed_path):
-            self._data_list = torch.load(processed_path, weights_only=False)
+            self._data_list = torch.load(processed_path)
             logger.info(f"Loaded {len(self._data_list)} pre-processed graphs.")
         else:
             logger.warning(f"Processed file not found: {processed_path}")

@@ -32,7 +32,7 @@ class DiffuCatPipeline:
         # Synthetic data (replace with real datasets in Phase 7)
         smiles_pool = [
             "CCO", "c1ccccc1", "CC(=O)O", "NCCO", "CC1=CC=CC=C1",
-            "CC(C)O", "C1=CC=C(C=C1)O", "CCN", "CC#N", "CC(=)N"
+            "CC(C)O", "C1=CC=C(C=C1)O", "CCN", "CC#N", "CC(=O)N"
         ]
         targets = [
             [0.8, 0.7, 0.9], [0.6, 0.8, 0.7], [0.9, 0.6, 0.8], [0.7, 0.9, 0.6], [0.5, 0.5, 0.5],

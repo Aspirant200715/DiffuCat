@@ -36,7 +36,7 @@ def main():
         return 1
     
     logger.info(f"📥 Loading processed dataset from {input_path}")
-    data_list = torch.load(input_path, weights_only=False)
+    data_list = torch.load(input_path)
     logger.info(f"✅ Loaded {len(data_list)} graphs")
     
     # ✅ FIX: Extract real SMILES from graph objects
