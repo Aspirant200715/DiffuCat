@@ -48,9 +48,9 @@ export function PropertyRadar({ data }: PropertyRadarProps) {
   }
 
   // Calculate averages
-  const avgActivity = data.reduce((acc, curr) => acc + curr.metrics.activity, 0) / data.length;
-  const avgSelectivity = data.reduce((acc, curr) => acc + curr.metrics.selectivity, 0) / data.length;
-  const avgStability = data.reduce((acc, curr) => acc + curr.metrics.stability, 0) / data.length;
+  const avgActivity = data.reduce((acc, curr) => acc + (curr.metrics?.activity ?? 0), 0) / data.length;
+  const avgSelectivity = data.reduce((acc, curr) => acc + (curr.metrics?.selectivity ?? 0), 0) / data.length;
+  const avgStability = data.reduce((acc, curr) => acc + (curr.metrics?.stability ?? 0), 0) / data.length;
 
   const chartData = [
     { subject: 'Activity', A: avgActivity, fullMark: 100 },

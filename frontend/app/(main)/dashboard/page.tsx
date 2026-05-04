@@ -24,10 +24,10 @@ export default function DashboardPage() {
 
   const handleSort = (column: string) => {
     const sorted = [...predictions].sort((a, b) => {
-      if (column === 'ucb_score') return b.ucb_score - a.ucb_score;
-      if (column === 'activity') return b.metrics.activity - a.metrics.activity;
-      if (column === 'selectivity') return b.metrics.selectivity - a.metrics.selectivity;
-      if (column === 'stability') return b.metrics.stability - a.metrics.stability;
+      if (column === 'ucb_score') return (b.ucb_score ?? 0) - (a.ucb_score ?? 0);
+      if (column === 'activity') return (b.metrics?.activity ?? 0) - (a.metrics?.activity ?? 0);
+      if (column === 'selectivity') return (b.metrics?.selectivity ?? 0) - (a.metrics?.selectivity ?? 0);
+      if (column === 'stability') return (b.metrics?.stability ?? 0) - (a.metrics?.stability ?? 0);
       return 0;
     });
     setPredictions(sorted);

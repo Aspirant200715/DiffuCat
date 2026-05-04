@@ -21,7 +21,7 @@ interface PredictionTableProps {
 }
 
 export function PredictionTable({ data, onSort }: PredictionTableProps) {
-  const maxUcb = Math.max(...data.map(d => d.ucb_score), 1);
+  const maxUcb = Math.max(...data.map(d => d.ucb_score ?? 0), 1);
 
   if (data.length === 0) {
     return (
@@ -84,15 +84,15 @@ export function PredictionTable({ data, onSort }: PredictionTableProps) {
               <TableCell className="w-1/6">
                 <div className="flex flex-col gap-1.5 w-full cursor-help group-hover:scale-[1.02] transition-transform">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="tabular-nums font-bold energy-text-cool">{row.metrics.activity.toFixed(2)}</span>
+                    <span className="tabular-nums font-bold energy-text-cool">{(row.metrics?.activity ?? 0).toFixed(2)}</span>
                     <span className="tabular-nums font-mono text-[10px] text-muted-foreground">
-                      ±{row.uncertainty.activity.std.toFixed(2)}
+                      ±{((row.uncertainty?.activity ?? row.uncertainty_details?.activity?.std) ?? 0).toFixed(2)}
                     </span>
                   </div>
                   <div className="relative h-1 w-full bg-[#05080f] rounded-full overflow-hidden hud-border">
                     <div 
                       className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[#38bdf8] to-[#818cf8]" 
-                      style={{ width: `${Math.min(Math.max(row.metrics.activity * 100, 0), 100)}%` }} 
+                      style={{ width: `${Math.min(Math.max((row.metrics?.activity ?? 0) * 100, 0), 100)}%` }} 
                     />
                   </div>
                 </div>
@@ -100,15 +100,15 @@ export function PredictionTable({ data, onSort }: PredictionTableProps) {
               <TableCell className="w-1/6">
                 <div className="flex flex-col gap-1.5 w-full cursor-help group-hover:scale-[1.02] transition-transform">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="tabular-nums font-bold energy-text-warm">{row.metrics.selectivity.toFixed(2)}</span>
+                    <span className="tabular-nums font-bold energy-text-warm">{(row.metrics?.selectivity ?? 0).toFixed(2)}</span>
                     <span className="tabular-nums font-mono text-[10px] text-muted-foreground">
-                      ±{row.uncertainty.selectivity.std.toFixed(2)}
+                      ±{((row.uncertainty?.selectivity ?? row.uncertainty_details?.selectivity?.std) ?? 0).toFixed(2)}
                     </span>
                   </div>
                   <div className="relative h-1 w-full bg-[#05080f] rounded-full overflow-hidden hud-border">
                     <div 
                       className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[#f59e0b] to-[#ef4444]" 
-                      style={{ width: `${Math.min(Math.max(row.metrics.selectivity * 100, 0), 100)}%` }} 
+                      style={{ width: `${Math.min(Math.max((row.metrics?.selectivity ?? 0) * 100, 0), 100)}%` }} 
                     />
                   </div>
                 </div>
@@ -116,24 +116,24 @@ export function PredictionTable({ data, onSort }: PredictionTableProps) {
               <TableCell className="w-1/6">
                 <div className="flex flex-col gap-1.5 w-full cursor-help group-hover:scale-[1.02] transition-transform">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="tabular-nums font-bold energy-text-neutral">{row.metrics.stability.toFixed(2)}</span>
+                    <span className="tabular-nums font-bold energy-text-neutral">{(row.metrics?.stability ?? 0).toFixed(2)}</span>
                     <span className="tabular-nums font-mono text-[10px] text-muted-foreground">
-                      ±{row.uncertainty.stability.std.toFixed(2)}
+                      ±{((row.uncertainty?.stability ?? row.uncertainty_details?.stability?.std) ?? 0).toFixed(2)}
                     </span>
                   </div>
                   <div className="relative h-1 w-full bg-[#05080f] rounded-full overflow-hidden hud-border">
                     <div 
                       className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[#10b981] to-[#34d399]" 
-                      style={{ width: `${Math.min(Math.max(row.metrics.stability * 100, 0), 100)}%` }} 
+                      style={{ width: `${Math.min(Math.max((row.metrics?.stability ?? 0) * 100, 0), 100)}%` }} 
                     />
                   </div>
                 </div>
               </TableCell>
               <TableCell>
-                <UCBBar score={row.ucb_score} maxScore={maxUcb} />
+                <UCBBar score={row.ucb_score ?? 0} maxScore={maxUcb} />
               </TableCell>
               <TableCell className="text-right">
-                <ParetoChip isOptimal={row.pareto_optimal} />
+                <ParetoChip isOptimal={!!row.pareto_optimal} />
               </TableCell>
             </TableRow>
           ))}

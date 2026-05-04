@@ -50,13 +50,13 @@ export function LabJobCard({ jobId }: LabJobCardProps) {
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Clock className="w-3 h-3" />
-                {new Date(data.created_at || Date.now()).toLocaleTimeString()}
+                {new Date((data.submitted_at as string) || Date.now()).toLocaleTimeString()}
               </span>
             </div>
           </div>
           
           <div className="flex-1 w-full flex justify-center pb-8 md:pb-0">
-            <StatusTimeline status={data.status} />
+            <StatusTimeline status={data.status as 'queued' | 'running' | 'completed' | 'failed'} />
           </div>
 
           <div className="flex justify-end gap-2 w-full md:w-auto">
