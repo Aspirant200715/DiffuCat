@@ -23,7 +23,7 @@ class GenerateRequest(BaseModel):
 
 class GenerateResponse(BaseModel):
     status: str
-    candidates_processed: int
+    candidates: List[str]
     message: str
 
 @router.post("/", response_model=GenerateResponse)
@@ -40,11 +40,14 @@ async def generate_candidates(
     - Returns candidates optimized for activity/selectivity/stability
     """
     try:
-        result = pipeline.train_on_synthetic_data(request.n_candidates)
+        generated_smiles = pipeline.generate_novel_candidates(
+            target_reaction=request.target_reaction,
+            n_candidates=request.n_candidates
+        )
         return GenerateResponse(
-            status=result.get("status", "success"),
-            candidates_processed=result.get("candidates_processed", 0),
-            message=f"Generated {result.get('candidates_processed', 0)} candidates for {request.target_reaction}"
+            status="success",
+            candidates=generated_smiles,
+            message=f"Successfully generated {len(generated_smiles)} novel catalyst candidates for {request.target_reaction} using DiffuCat Generative AI"
         )
     except Exception as e:
         raise HTTPException(

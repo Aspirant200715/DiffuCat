@@ -7,6 +7,8 @@ from src.backend.core.config import BackendConfig
 from src.backend.services.lab_client import get_lab_client, LabResult
 from src.backend.core.security import TokenData
 from src.core.logger import setup_logger
+from src.backend.api.v1.generate import get_pipeline
+from src.backend.services.pipeline import DiffuCatPipeline
 
 logger = setup_logger("api.v1.lab")
 
@@ -104,7 +106,11 @@ async def get_lab_status(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Job {job_id} not found"
         )
-    
+    if "submitted_at" in status_data and hasattr(status_data["submitted_at"], "isoformat"):
+        status_data["submitted_at"] = status_data["submitted_at"].isoformat()
+    if "completed_at" in status_data and hasattr(status_data["completed_at"], "isoformat"):
+        status_data["completed_at"] = status_data["completed_at"].isoformat()
+        
     return JobStatusResponse(**status_data)
 
 @router.get("/results/{job_id}", response_model=List[LabResultResponse])
@@ -142,24 +148,50 @@ async def get_lab_results(
         for r in results
     ]
 
+async def _async_retrain_loop(job_ids: List[str], lab_client, pipeline: DiffuCatPipeline):
+    """Background task to fetch completed lab results and run active learning fine-tuning."""
+    try:
+        smiles_list = []
+        targets_list = []
+        for job_id in job_ids:
+            results = await lab_client.get_results(job_id)
+            if results:
+                for r in results:
+                    # Ignore failed synthesis in training data
+                    if r.synthesis_success:
+                        smiles_list.append(r.smiles)
+                        targets_list.append([r.activity, r.selectivity, r.stability])
+        
+        if smiles_list:
+            logger.info(f"🧠 Active Learning: Fetched {len(smiles_list)} valid results from DFT/Lab. Initiating fine-tuning...")
+            pipeline.fine_tune(smiles_list, targets_list)
+            logger.info("🎉 Active Learning loop successfully incorporated new data into the model!")
+        else:
+            logger.warning("No valid lab results found for the provided job IDs.")
+    except Exception as e:
+        logger.error(f"❌ Active learning loop failed: {e}")
+
 @router.post("/retrain")
 async def trigger_model_retrain(
     job_ids: List[str],
     background_tasks: BackgroundTasks,
+    lab_client = Depends(get_lab_client_instance),
+    pipeline: DiffuCatPipeline = Depends(get_pipeline),
     user: TokenData = Depends(get_current_user)
 ):
     """
     Trigger model retraining with new experimental data.
     
     PDF Alignment: Active Learning Loop (Sec 2)
-    - Incorporates lab results into training set
-    - Improves model accuracy over time
+    - Incorporates lab/DFT results into training set
+    - Improves model accuracy over time via fine-tuning
     """
-    # In production: trigger ML pipeline
-    # For MVP: log the request
     logger.info(f"🔄 Retraining triggered for jobs: {job_ids}")
+    
+    # Spawn background task so it doesn't block the API
+    background_tasks.add_task(_async_retrain_loop, job_ids, lab_client, pipeline)
     
     return {
         "status": "queued",
-        "message": f"Model retraining queued for {len(job_ids)} jobs"
+        "message": f"Active Learning fine-tuning queued for {len(job_ids)} jobs"
     }

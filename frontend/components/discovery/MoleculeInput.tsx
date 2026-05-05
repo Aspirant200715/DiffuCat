@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, FlaskConical } from "lucide-react";
+import { Loader2, FlaskConical, Sparkles } from "lucide-react";
+import { useGenerateCandidates } from "@/hooks/useMolecule";
 
 interface MoleculeInputProps {
   onSubmit: (smilesList: string[]) => void;
@@ -13,6 +14,7 @@ interface MoleculeInputProps {
 
 export function MoleculeInput({ onSubmit, isLoading }: MoleculeInputProps) {
   const [input, setInput] = useState("");
+  const generateMutation = useGenerateCandidates();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +27,18 @@ export function MoleculeInput({ onSubmit, isLoading }: MoleculeInputProps) {
       .filter((s) => s.length > 0);
       
     onSubmit(smilesList);
+  };
+
+  const handleGenerate = async () => {
+    try {
+      const data = await generateMutation.mutateAsync({ target_reaction: "default", n_candidates: 3 });
+      if (data.candidates && data.candidates.length > 0) {
+        const generatedString = data.candidates.join(", ");
+        setInput(prev => prev ? prev + ", " + generatedString : generatedString);
+      }
+    } catch {
+      // Handled by hook
+    }
   };
 
   return (
@@ -58,6 +72,22 @@ export function MoleculeInput({ onSubmit, isLoading }: MoleculeInputProps) {
               <button type="button" onClick={() => setInput(prev => prev ? prev + ', CCO' : 'CCO')} className="text-[10px] bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 rounded-sm transition-colors uppercase tracking-wider font-mono">Ethanol</button>
               <button type="button" onClick={() => setInput(prev => prev ? prev + ', c1ccccc1' : 'c1ccccc1')} className="text-[10px] bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 rounded-sm transition-colors uppercase tracking-wider font-mono">Benzene</button>
               <button type="button" onClick={() => setInput(prev => prev ? prev + ', CC(=O)OC1=CC=CC=C1C(=O)O' : 'CC(=O)OC1=CC=CC=C1C(=O)O')} className="text-[10px] bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 rounded-sm transition-colors uppercase tracking-wider font-mono">Aspirin</button>
+              
+              <Button 
+                type="button" 
+                variant="outline"
+                size="sm"
+                onClick={handleGenerate}
+                disabled={generateMutation.isPending || isLoading}
+                className="ml-auto text-[10px] bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 h-6 px-3 py-0 rounded-sm transition-colors uppercase tracking-wider font-mono flex items-center gap-1"
+              >
+                {generateMutation.isPending ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3 h-3" />
+                )}
+                Auto-Generate AI
+              </Button>
             </div>
           </div>
           <div className="flex justify-between items-center">

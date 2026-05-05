@@ -11,6 +11,7 @@ from torch_geometric.loader import DataLoader
 from src.core.config import DiffuCatConfig
 from src.data.processor import MoleculeGraphProcessor
 from src.models.predictor import CatalystPropertyPredictor
+from src.models.diffusion import CatalystDiffusionModel
 from src.training.trainer import CatalystTrainer
 from src.services.ranking import rank_candidates
 from src.services.explainability import compute_synthetic_accessibility, generate_counterfactual_hint
@@ -58,6 +59,52 @@ class DiffuCatPipeline:
             "candidates_processed": len(graphs),
             "epochs": 2
         }
+
+    def fine_tune(self, smiles_list: List[str], targets_list: List[List[float]]) -> Dict[str, Any]:
+        """
+        Active Learning Loop: Fine-tune the model on new lab-validated results.
+        """
+        from src.core.logger import setup_logger
+        logger = setup_logger("pipeline")
+        logger.info(f"🔄 Fine-tuning model on {len(smiles_list)} lab-validated candidates...")
+        
+        if not self.model:
+            self.model = CatalystPropertyPredictor(self.mvp_config)
+            
+        graphs = self.processor.process_batch(smiles_list, targets_list)
+        if not graphs:
+            raise ValueError("Failed to process validated SMILES for fine-tuning")
+            
+        trainer = CatalystTrainer(self.mvp_config, self.model)
+        train_loader = DataLoader(graphs, batch_size=2, shuffle=True)
+        # Run 3 epochs of fine-tuning to heavily weight the real data
+        trainer.train(train_loader, epochs=3)
+        
+        self._is_trained = True
+        logger.info("✅ Model fine-tuning complete.")
+        return {
+            "status": "fine_tuned",
+            "candidates_processed": len(graphs),
+            "epochs_run": 3
+        }
+
+    def generate_novel_candidates(self, target_reaction: str, n_candidates: int = 10) -> List[str]:
+        """Generate novel catalyst SMILES using the diffusion model."""
+        # Instantiate the generative model
+        diffusion_model = CatalystDiffusionModel(
+            latent_dim=self.mvp_config.model_gnn.hidden_channels,
+            timesteps=100
+        )
+        diffusion_model.to(self.mvp_config.training.resolved_device)
+        
+        # Run reverse diffusion sampling
+        generated_smiles = diffusion_model.sample(
+            target_reaction=target_reaction,
+            n_candidates=n_candidates,
+            device=self.mvp_config.training.resolved_device
+        )
+        
+        return generated_smiles
 
     def predict_with_uncertainty(self, smiles_list: List[str]) -> List[Dict[str, Any]]:
         """Predict properties + uncertainty for given SMILES."""

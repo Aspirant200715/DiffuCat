@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api, generateApi } from '@/lib/api';
-import { PredictRequest, PredictResponse } from '@/lib/types';
+import { PredictRequest, PredictResponse, GenerateRequest, GenerateResponse } from '@/lib/types';
 import { toast } from 'sonner';
 
 export function usePredict() {
@@ -33,6 +33,24 @@ export function usePredict() {
     onSuccess: (data: PredictResponse) => {
       toast.success('Prediction Complete', {
         description: `Successfully analyzed ${data.predictions.length} candidates.`,
+      });
+    },
+  });
+}
+
+export function useGenerateCandidates() {
+  return useMutation({
+    mutationFn: async (data: GenerateRequest) => {
+      return await generateApi.generateCandidates(data);
+    },
+    onError: (error) => {
+      toast.error('Generation Failed', {
+        description: error instanceof Error ? error.message : 'An unknown error occurred',
+      });
+    },
+    onSuccess: (data: GenerateResponse) => {
+      toast.success('Generation Complete', {
+        description: `Successfully generated ${data.candidates.length} novel candidates.`,
       });
     },
   });

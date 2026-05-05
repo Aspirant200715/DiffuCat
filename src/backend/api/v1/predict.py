@@ -4,7 +4,15 @@ from typing import List
 from src.backend.core.dependencies import get_current_user
 from src.backend.services.pipeline import DiffuCatPipeline
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Any
+from fastapi import BackgroundTasks
+import uuid
+import logging
+
+logger = logging.getLogger(__name__)
+
+# Fallback in-memory store if Redis/Celery is down
+_fallback_jobs = {}
 
 router = APIRouter(prefix="/v1/predict", tags=["predict"])
 
@@ -26,37 +34,108 @@ class PredictionResult(BaseModel):
 class PredictResponse(BaseModel):
     predictions: List[PredictionResult]
 
-@router.post("/", response_model=PredictResponse)
-async def predict_properties(
-    request: PredictRequest,
-    pipeline: DiffuCatPipeline = Depends(get_pipeline),
-    user = Depends(get_current_user)
-):
-    """
-    Predict catalytic properties with uncertainty quantification.
-    
-    PDF Alignment: Uncertainty Quantification (Sec 2)
-    - Bayesian neural networks with confidence intervals
-    - Synthetic accessibility scoring
-    - Counterfactual explanations
-    """
-    if not request.smiles_list:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="smiles_list cannot be empty"
-        )
-        
+class JobSubmitResponse(BaseModel):
+    job_id: str
+    status: str
+
+class JobStatusResponse(BaseModel):
+    job_id: str
+    status: str
+    result: Optional[PredictResponse] = None
+    error: Optional[str] = None
+
+def _run_local_prediction_fallback(job_id: str, smiles_list: List[str], pipeline: DiffuCatPipeline):
+    """Fallback runner if Celery is unavailable."""
     try:
-        results = pipeline.predict_with_uncertainty(request.smiles_list)
-        # Auto-rank: add UCB scores + Pareto optimality to each prediction
+        results = pipeline.predict_with_uncertainty(smiles_list)
         if results:
             try:
                 results = pipeline.rank_candidates(results)
             except Exception:
-                pass  # Ranking is optional; predictions still valid without it
+                pass
+        _fallback_jobs[job_id] = {"status": "SUCCESS", "result": {"predictions": results}}
+    except Exception as e:
+        _fallback_jobs[job_id] = {"status": "FAILURE", "error": str(e)}
+
+@router.post("/", response_model=PredictResponse)
+async def predict_properties_sync(
+    request: PredictRequest,
+    pipeline: DiffuCatPipeline = Depends(get_pipeline),
+    user = Depends(get_current_user)
+):
+    """Synchronous fallback prediction (legacy)."""
+    if not request.smiles_list:
+        raise HTTPException(status_code=400, detail="smiles_list cannot be empty")
+    try:
+        results = pipeline.predict_with_uncertainty(request.smiles_list)
+        if results:
+            try:
+                results = pipeline.rank_candidates(results)
+            except Exception:
+                pass
         return PredictResponse(predictions=results)
     except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Prediction failed: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/submit", response_model=JobSubmitResponse)
+async def submit_prediction_task(
+    request: PredictRequest,
+    background_tasks: BackgroundTasks,
+    pipeline: DiffuCatPipeline = Depends(get_pipeline),
+    user = Depends(get_current_user)
+):
+    """
+    Submit prediction task asynchronously to Celery.
+    Gracefully falls back to local BackgroundTasks if Redis is unavailable.
+    """
+    if not request.smiles_list:
+        raise HTTPException(status_code=400, detail="smiles_list cannot be empty")
+        
+    try:
+        from src.backend.tasks.predict_tasks import run_prediction_task
+        from celery.exceptions import TimeoutError
+        # Try Celery
+        task = run_prediction_task.apply_async(args=[request.smiles_list], connect_timeout=1)
+        return JobSubmitResponse(job_id=task.id, status="queued")
+    except Exception as e:
+        logger.warning(f"Celery unavailable ({str(e)}), falling back to local background task.")
+        job_id = f"local_{uuid.uuid4().hex}"
+        _fallback_jobs[job_id] = {"status": "PENDING"}
+        background_tasks.add_task(_run_local_prediction_fallback, job_id, request.smiles_list, pipeline)
+        return JobSubmitResponse(job_id=job_id, status="queued_local")
+
+@router.get("/status/{job_id}", response_model=JobStatusResponse)
+async def get_prediction_status(job_id: str, user = Depends(get_current_user)):
+    """Check status of a prediction job and return results if complete."""
+    # Check local fallback first
+    if str(job_id).startswith("local_"):
+        job = _fallback_jobs.get(job_id)
+        if not job:
+            raise HTTPException(status_code=404, detail="Local job not found")
+        
+        status = job["status"]
+        if status == "SUCCESS":
+            return JobStatusResponse(job_id=job_id, status="SUCCESS", result=PredictResponse(**job["result"]))
+        elif status == "FAILURE":
+            return JobStatusResponse(job_id=job_id, status="FAILURE", error=job.get("error", "Unknown error"))
+        return JobStatusResponse(job_id=job_id, status=status)
+        
+    # Check Celery
+    try:
+        from celery.result import AsyncResult
+        from src.backend.core.celery_app import celery_app
+        
+        task_result = AsyncResult(job_id, app=celery_app)
+        
+        if task_result.state == "SUCCESS":
+            return JobStatusResponse(
+                job_id=job_id, 
+                status="SUCCESS", 
+                result=PredictResponse(predictions=task_result.result)
+            )
+        elif task_result.state == "FAILURE":
+            return JobStatusResponse(job_id=job_id, status="FAILURE", error=str(task_result.info))
+            
+        return JobStatusResponse(job_id=job_id, status=task_result.state)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to check Celery task: {str(e)}")
