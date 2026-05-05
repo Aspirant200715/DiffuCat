@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { QueryProvider } from "@/components/query-provider";
+import ClientErrorLogger from "@/components/ClientErrorLogger";
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -33,6 +34,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
+            <ClientErrorLogger />
             {children}
             <Toaster />
           </QueryProvider>

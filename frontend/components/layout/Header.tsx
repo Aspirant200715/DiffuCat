@@ -10,9 +10,8 @@ export function Header() {
   const pathname = usePathname();
   
   // Format pathname to Title Case
-  const pageTitle = pathname === "/" 
-    ? "Welcome" 
-    : pathname.split("/")[1].charAt(0).toUpperCase() + pathname.split("/")[1].slice(1);
+  const segment = (pathname || "/").split("/")[1] || "";
+  const pageTitle = segment === "" ? "Welcome" : segment.charAt(0).toUpperCase() + segment.slice(1);
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-border bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
