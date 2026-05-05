@@ -7,11 +7,11 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="relative flex min-h-screen">
+    <div className="relative flex min-h-screen bg-void">
       <Sidebar />
-      <div className="flex-1 sm:ml-64 flex flex-col min-h-screen">
+      <div className="flex-1 ml-16 lg:ml-[220px] flex flex-col min-h-screen transition-all duration-300">
         <Header />
-        <main className="flex-1 p-6 overflow-x-hidden">
+        <main className="flex-1 p-6 lg:p-10 overflow-x-hidden relative">
           {children}
         </main>
       </div>

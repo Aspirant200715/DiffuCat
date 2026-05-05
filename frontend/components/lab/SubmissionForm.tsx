@@ -1,73 +1,46 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useSubmitLabJob } from "@/hooks/useLabJobs";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Beaker, Loader2 } from "lucide-react";
+import { useState } from 'react';
+import { useSubmitLabJob } from '@/hooks/useLabJobs';
 
-interface SubmissionFormProps {
-  onJobSubmitted: (jobId: string) => void;
-}
-
-export function SubmissionForm({ onJobSubmitted }: SubmissionFormProps) {
-  const [candidates, setCandidates] = useState("");
+export function SubmissionForm() {
+  const [input, setInput] = useState('');
   const submitMutation = useSubmitLabJob();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!candidates.trim()) return;
-
-    const candidateList = candidates
-      .split(/[\n,]+/)
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
-
-    try {
-      const result = await submitMutation.mutateAsync({ candidates: candidateList });
-      onJobSubmitted(result.job_id);
-      setCandidates(""); // Clear on success
-    } catch {
-      // Error handled by hook
+    if (!input.trim()) return;
+    const candidates = input.split(/[\n,]+/).map((s) => s.trim()).filter(Boolean);
+    if (candidates.length) {
+      submitMutation.mutate(candidates, { onSuccess: () => setInput('') });
     }
   };
 
   return (
-    <Card className="glass-panel overflow-hidden border-primary/20 relative">
-      <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-[40px] -z-10 pointer-events-none" />
-      <CardHeader className="border-b border-border/40 bg-muted/10 pb-4">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <Beaker className="w-5 h-5 text-primary" />
-          Submit for Validation
-        </CardTitle>
-        <CardDescription>
-          Enter SMILES strings to queue for automated lab synthesis and testing.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Textarea
-            placeholder="SMILES to validate..."
-            value={candidates}
-            onChange={(e) => setCandidates(e.target.value)}
-            disabled={submitMutation.isPending}
-            className="min-h-[120px] font-mono text-sm resize-y bg-black/20 border-border/50 focus-visible:ring-primary/50"
-          />
-          <div className="flex justify-end">
-            <Button type="submit" disabled={submitMutation.isPending || !candidates.trim()}>
-              {submitMutation.isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                "Queue Job"
-              )}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+    <form onSubmit={handleSubmit} className="glass rounded-2xl border border-border/80 p-6 space-y-4">
+      <div>
+        <div className="text-xs font-mono uppercase tracking-[0.3em] text-text-tertiary">New Lab Job</div>
+        <h3 className="text-lg font-semibold mt-2">Experimental Forge</h3>
+        <p className="text-sm text-text-secondary mt-2">Submit high-confidence candidates for synthesis.</p>
+      </div>
+
+      <div>
+        <label className="block text-xs font-mono uppercase tracking-[0.3em] text-text-tertiary mb-2">Candidate SMILES</label>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="CCO, c1ccccc1, CC(=O)O"
+          className="w-full min-h-[140px] rounded-xl bg-surface-1/80 border border-border/70 p-3 text-sm font-mono text-text-primary focus:outline-none focus:border-cyan/60"
+        />
+      </div>
+
+      <button
+        type="submit"
+        disabled={submitMutation.isPending || !input.trim()}
+        className="w-full h-11 rounded-full bg-cyan text-void font-semibold shadow-[0_0_20px_rgba(14,165,233,0.35)]"
+      >
+        {submitMutation.isPending ? 'Submitting…' : 'Queue for Synthesis'}
+      </button>
+    </form>
   );
 }

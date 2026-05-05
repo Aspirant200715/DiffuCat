@@ -1,80 +1,56 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { SubmissionForm } from "@/components/lab/SubmissionForm";
-import { LabJobCard } from "@/components/lab/LabJobCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FlaskConical } from "lucide-react";
+import { SubmissionForm } from '@/components/lab/SubmissionForm';
+import { JobCard } from '@/components/lab/JobCard';
+import { useDiscovery } from '@/store/discovery';
 
 export default function LabPage() {
-  const [jobIds, setJobIds] = useState<string[]>([]);
-
-  const handleJobSubmitted = (jobId: string) => {
-    setJobIds((prev) => [jobId, ...prev]);
-  };
+  const { jobIds } = useDiscovery();
 
   return (
-    <div className="container max-w-screen-2xl py-6 space-y-6 relative min-h-screen perspective">
-      <div className="absolute top-0 left-0 w-full h-full hex-pattern opacity-10 pointer-events-none -z-10" />
-      
-      <div className="flex flex-col gap-2">
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tighter">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-indigo-400 to-emerald-400">
-            Experimental
-          </span>{" "}
-          <span className="text-foreground font-light">Forge</span>
-        </h1>
-        <p className="text-primary font-mono text-xs uppercase tracking-[0.2em] opacity-80">
-          [Status: Online] Multi-Phase Reaction Orchestration
-        </p>
+    <div className="relative space-y-8">
+      <div className="absolute inset-0 -z-10 opacity-20 bg-[url('/chem-flasks.svg')] bg-cover bg-center" />
+      <div>
+        <h2 className="text-3xl font-semibold">Experimental Forge</h2>
+        <p className="text-text-secondary mt-2">Queue synthesis jobs and track the lab feedback loop.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-4">
-        <div className="lg:col-span-1 space-y-6 preserve-3d">
-          <div className="p-1 glass-panel hud-border rounded-2xl card-3d">
-            <SubmissionForm onJobSubmitted={handleJobSubmitted} />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="lg:col-span-1 space-y-6">
+          <SubmissionForm />
+          <div className="glass rounded-2xl border border-border/80 p-6">
+            <div className="text-xs font-mono uppercase tracking-[0.3em] text-text-tertiary">Resource Status</div>
+            <div className="mt-4 space-y-3 text-sm text-text-secondary">
+              <div className="flex items-center justify-between">
+                <span>Synthesizers</span>
+                <span className="text-emerald">3 / 4 Online</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Reagents</span>
+                <span className="text-amber">Low (22%)</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Queue Time</span>
+                <span className="text-text-primary">~45 mins</span>
+              </div>
+            </div>
           </div>
-          
-          <Card className="glass-panel border-primary/10 hud-border hidden lg:block card-3d">
-            <CardHeader className="bg-muted/30 border-b border-primary/10">
-              <CardTitle className="text-xs font-mono uppercase tracking-widest text-primary/70">Lab Resources</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 space-y-4">
-              <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-muted-foreground">Synthesizer Alpha</span>
-                <span className="text-emerald-500">[IDLE]</span>
-              </div>
-              <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-muted-foreground">Analysis Module B</span>
-                <span className="text-primary animate-pulse">[BUSY]</span>
-              </div>
-              <div className="h-1 w-full bg-muted/30 rounded-full overflow-hidden mt-2">
-                <div className="h-full bg-primary/30 w-2/3" />
-              </div>
-            </CardContent>
-          </Card>
         </div>
-        
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-primary/70">Active Experimental Jobs</h2>
-            <div className="h-px flex-1 mx-6 bg-gradient-to-r from-primary/30 to-transparent" />
+
+        <div className="lg:col-span-3 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Active Jobs</h3>
+            <span className="text-xs font-mono text-text-tertiary">{jobIds.length} total</span>
           </div>
-          
+
           {jobIds.length === 0 ? (
-            <div className="border-2 border-dashed border-primary/20 rounded-2xl p-16 text-center bg-muted/30 flex flex-col items-center justify-center relative group">
-              <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mb-6 border border-primary/10 group-hover:border-primary/30 transition-all">
-                <FlaskConical className="w-8 h-8 text-primary/30 group-hover:text-primary/60 transition-all" />
-              </div>
-              <p className="text-primary/70 font-mono tracking-widest uppercase text-sm mb-2">No Active Lab Jobs</p>
-              <p className="text-muted-foreground text-xs font-mono max-w-xs">
-                Queue top-performing candidates for synthesis and property verification.
-              </p>
+            <div className="h-64 border border-dashed border-border/70 rounded-2xl flex items-center justify-center text-text-tertiary font-mono">
+              No active synthesis jobs.
             </div>
           ) : (
-            <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {jobIds.map((id) => (
-                <LabJobCard key={id} jobId={id} />
+                <JobCard key={id} jobId={id} />
               ))}
             </div>
           )}

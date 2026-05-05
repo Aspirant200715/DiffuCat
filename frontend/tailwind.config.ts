@@ -58,6 +58,22 @@ const config: Config = {
           DEFAULT: "#F59E0B",
           foreground: "#ffffff",
         },
+        // DiffuCat Custom Scifi Palette
+        void: "#010409",
+        "neon-teal": "#00FFC6",
+        "electric-blue": "#3B82F6",
+        "quantum-purple": "#8B5CF6",
+        "surface-0": "var(--surface-0)",
+        "surface-1": "var(--surface-1)",
+        "surface-2": "var(--surface-2)",
+        cyan: "var(--cyan)",
+        emerald: "var(--emerald)",
+        amber: "var(--amber)",
+        red: "var(--red)",
+        "text-primary": "var(--text-primary)",
+        "text-secondary": "var(--text-secondary)",
+        "text-tertiary": "var(--text-tertiary)",
+
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,7 +81,7 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "sans-serif"],
+        sans: ["var(--font-display)", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
       },
       keyframes: {

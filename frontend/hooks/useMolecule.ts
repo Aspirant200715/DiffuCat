@@ -1,57 +1,47 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { api, generateApi } from '@/lib/api';
-import { PredictRequest, PredictResponse, GenerateRequest, GenerateResponse } from '@/lib/types';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '@/lib/api';
 import { toast } from 'sonner';
+import { useDiscovery } from '@/store/discovery';
 
 export function usePredict() {
+  const { setTraining, setPredictions } = useDiscovery();
+
   return useMutation({
-    // Try predict; if backend responds that model is untrained, trigger training once and retry
-    mutationFn: async (data: PredictRequest) => {
+    mutationFn: async (smiles_list: string[]) => {
       try {
-        return await api.predict(data);
-      } catch (err: any) {
-        const msg = err instanceof Error ? err.message : String(err);
-        if (msg && msg.includes('Model must be trained')) {
-          // Inform user
-          toast('Training model automatically (dev)...');
-          try {
-            await generateApi.train({ n_candidates: Math.max(6, (data.smiles_list || []).length) });
-          } catch (tErr) {
-            throw new Error(`Prediction failed and auto-train failed: ${tErr instanceof Error ? tErr.message : String(tErr)}`);
-          }
-          // Retry predict once
-          return await api.predict(data);
+        const data = await api.predictSync(smiles_list);
+        if (data.detail?.includes('Model must be trained') || data.message?.includes('Model must be trained')) {
+          throw new Error('needs_training');
         }
-        throw err;
+        return data;
+      } catch (e: any) {
+        if (e.message === 'needs_training' || String(e).includes('trained')) {
+          setTraining(true);
+          toast.loading('Training model on synthetic data…', { id: 'train-toast' });
+          await api.train(10);
+          setTraining(false);
+          toast.success('Model ready!', { id: 'train-toast' });
+          return api.predictSync(smiles_list);
+        }
+        throw e;
       }
     },
-    onError: (error) => {
-      toast.error('Prediction Failed', {
-        description: error instanceof Error ? error.message : 'An unknown error occurred',
-      });
+    onSuccess: (data) => {
+      if (!data.predictions) return;
+      const mapped = data.predictions.map((p: any) => ({
+        ...p,
+        metrics: p.predictions ?? p.metrics,
+      }));
+      setPredictions(mapped);
+      toast.success(`${mapped.length} candidates predicted`);
     },
-    onSuccess: (data: PredictResponse) => {
-      toast.success('Prediction Complete', {
-        description: `Successfully analyzed ${data.predictions.length} candidates.`,
-      });
-    },
+    onError: (e: Error) => toast.error(e.message),
   });
 }
 
 export function useGenerateCandidates() {
-  return useMutation({
-    mutationFn: async (data: GenerateRequest) => {
-      return await generateApi.generateCandidates(data);
-    },
-    onError: (error) => {
-      toast.error('Generation Failed', {
-        description: error instanceof Error ? error.message : 'An unknown error occurred',
-      });
-    },
-    onSuccess: (data: GenerateResponse) => {
-      toast.success('Generation Complete', {
-        description: `Successfully generated ${data.candidates.length} novel candidates.`,
-      });
-    },
+  return useMutation<any, Error, string>({
+    mutationFn: (reaction: string = 'default') => api.generate(reaction, 5),
+    onError: (e: Error) => toast.error(e.message),
   });
 }

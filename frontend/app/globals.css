@@ -4,276 +4,151 @@
 
 @layer base {
   :root {
-    --background: 220 14% 96%;
-    --foreground: 224 71.4% 4.1%;
+    --void: #03050A;
+    --surface-0: #070C14;
+    --surface-1: #0D1520;
+    --surface-2: #131E2E;
+    --border: 199 89% 48% / 0.12;
+    --border-active: 199 89% 48% / 0.5;
+    --cyan: #0EA5E9;
+    --cyan-glow: rgba(14, 165, 233, 0.35);
+    --cyan-dim: rgba(14, 165, 233, 0.15);
+    --emerald: #10B981;
+    --emerald-glow: rgba(16, 185, 129, 0.35);
+    --amber: #F59E0B;
+    --amber-glow: rgba(245, 158, 11, 0.25);
+    --red: #EF4444;
+    --text-primary: rgba(255, 255, 255, 0.95);
+    --text-secondary: rgba(255, 255, 255, 0.55);
+    --text-tertiary: rgba(255, 255, 255, 0.30);
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 16px;
+    --r-xl: 24px;
 
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-
-    --primary: 199 89% 48%; /* #0EA5E9 */
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    --background: 222 47% 2%;
+    --foreground: 0 0% 100%;
+    --card: 222 47% 4%;
+    --card-foreground: 0 0% 100%;
+    --popover: 222 47% 4%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 222 47% 2%;
+    --secondary: 162 73% 45%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 199 89% 48% / 0.1;
+    --accent-foreground: 199 89% 48%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --input: 199 89% 48% / 0.2;
     --ring: 199 89% 48%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    /* Premium Scientific Dark Theme */
-    --background: 213 29% 6%; /* #0B0F14 */
-    --foreground: 210 40% 98%;
-
-    --card: 221 39% 11%; /* #111827 */
-    --card-foreground: 210 40% 98%;
-
-    --popover: 221 39% 11%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 199 89% 48%; /* #0EA5E9 */
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 215 28% 17%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 215 28% 17%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 215 28% 17%; /* #1F2937 */
-    --input: 215 28% 17%;
-    --ring: 199 89% 48%;
+    --radius: 12px;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-display), system-ui, -apple-system, Segoe UI, sans-serif;
+    background:
+      radial-gradient(circle at 20% -10%, rgba(14, 165, 233, 0.18), transparent 45%),
+      radial-gradient(circle at 80% 10%, rgba(16, 185, 129, 0.12), transparent 40%),
+      radial-gradient(circle at 50% 120%, rgba(14, 165, 233, 0.08), transparent 45%),
+      var(--void);
+    overflow-x: hidden;
   }
 }
 
-/* Custom Utilities for Depth & Animation */
 @layer utilities {
-  .glass-panel {
-    @apply bg-card/80 backdrop-blur-md border border-border/50 shadow-lg;
-  }
-  
-  .molecular-glow {
-    box-shadow: 0 0 40px -10px hsl(var(--primary) / 0.3);
-  }
-  
-  .hover-molecular-glow:hover {
-    box-shadow: 0 0 40px -10px hsl(var(--primary) / 0.4);
+  .glass {
+    background: linear-gradient(135deg, rgba(13, 21, 32, 0.8), rgba(7, 12, 20, 0.9));
+    border: 1px solid hsl(var(--border));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
-  .animate-slow-spin {
-    animation: spin 60s linear infinite;
+  .hud-scan::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(14, 165, 233, 0.015) 2px, rgba(14, 165, 233, 0.015) 4px
+    );
+    pointer-events: none;
   }
 
-  /* Pro-Chem Utilities */
-  .hex-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='103.923' viewBox='0 0 60 103.923' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='rgba(14, 165, 233, 0.1)' stroke-width='1'/%3E%3C/svg%3E");
-    background-size: 60px 103.923px;
-  }
-  
-  .dark .hex-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='103.923' viewBox='0 0 60 103.923' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='rgba(14, 165, 233, 0.05)' stroke-width='1'/%3E%3C/svg%3E");
+  .neon-cyan {
+    color: var(--cyan);
+    text-shadow: 0 0 20px var(--cyan-glow), 0 0 60px rgba(14, 165, 233, 0.15);
   }
 
-  .hud-border {
-    border: 1px solid hsl(var(--primary) / 0.2);
-    box-shadow: inset 0 0 20px hsl(var(--primary) / 0.05);
+  .neon-emerald {
+    color: var(--emerald);
+    text-shadow: 0 0 20px var(--emerald-glow);
   }
 
-  .hud-border-active {
-    border: 1px solid hsl(var(--primary) / 0.8);
-    box-shadow: 0 0 10px hsl(var(--primary) / 0.4), inset 0 0 15px hsl(var(--primary) / 0.2);
+  .gradient-border {
+    position: relative;
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--cyan), var(--emerald), var(--amber));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .gradient-border:hover::before { opacity: 1; }
+
+  .hex-bg {
+    background-image:
+      url("data:image/svg+xml,%3Csvg width='52' height='90' viewBox='0 0 52 90' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 0l26 15v30L26 60 0 45V15z' fill='none' stroke='rgba(14,165,233,0.07)' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 52px 90px;
   }
 
-  .terminal-input {
-    background-color: hsl(var(--muted) / 0.3) !important;
-    border: 1px solid hsl(var(--primary) / 0.3) !important;
-    color: hsl(var(--foreground)) !important;
-    box-shadow: inset 0 0 20px hsl(var(--primary) / 0.05) !important;
+  .grid-faint {
+    background-image:
+      linear-gradient(rgba(14, 165, 233, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14, 165, 233, 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
-  
-  .dark .terminal-input {
-    background-color: #05080f !important;
-    color: #38bdf8 !important;
+
+  .float-slow {
+    animation: float-slow 8s ease-in-out infinite;
   }
-  
-  .terminal-input:focus {
-    border-color: hsl(var(--primary) / 0.8) !important;
-    box-shadow: 0 0 15px hsl(var(--primary) / 0.2), inset 0 0 20px hsl(var(--primary) / 0.1) !important;
+
+  .cursor-blink {
+    animation: cursor-blink 1.1s steps(2, start) infinite;
   }
 
   @keyframes float-slow {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    33% { transform: translate(10px, -15px) rotate(5deg); }
-    66% { transform: translate(-5px, 10px) rotate(-3deg); }
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-14px); }
+    100% { transform: translateY(0px); }
   }
 
-  @keyframes float-delayed {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    33% { transform: translate(-15px, 10px) rotate(-5deg); }
-    66% { transform: translate(10px, -5px) rotate(3deg); }
+  @keyframes cursor-blink {
+    to { opacity: 0; }
   }
+}
 
-  @keyframes molecular-bond {
-    0%, 100% { stroke-dashoffset: 0; opacity: 0.3; }
-    50% { stroke-dashoffset: 100; opacity: 0.8; }
-  }
-
-  .animate-float-slow {
-    animation: float-slow 10s ease-in-out infinite;
-  }
-
-  .animate-float-delayed {
-    animation: float-delayed 12s ease-in-out infinite;
-  }
-
-  .molecular-line {
-    stroke-dasharray: 5 5;
-    animation: molecular-bond 4s linear infinite;
-  }
-
-  /* 3D Depth Utilities */
-  .perspective {
-    perspective: 1000px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-
-  .card-3d {
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateZ(0);
-  }
-
-  .card-3d:hover {
-    transform: translateZ(20px) rotateX(2deg) rotateY(2deg);
-  }
-
-  .hud-shadow {
-    box-shadow: 0 0 30px -10px hsl(var(--primary) / 0.5);
-  }
-
-  .neon-glow-emerald {
-    box-shadow: 0 0 20px -5px rgba(16, 185, 129, 0.5);
-  }
-
-  /* High-Visibility 3D Chemistry Styles */
-  .atom-sphere {
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, var(--sphere-color, #38bdf8), #000);
-    box-shadow: inset -5px -5px 15px rgba(0,0,0,0.8), 5px 5px 15px rgba(0,0,0,0.4);
-    filter: drop-shadow(0 0 10px var(--sphere-glow, rgba(56, 189, 248, 0.4)));
-  }
-
-  .molecular-link-3d {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    height: 2px;
-    box-shadow: 0 0 5px rgba(255,255,255,0.1);
-  }
-
-  .chem-bg {
-    background-image: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  .hex-pattern-vibrant {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='103.923' viewBox='0 0 60 103.923' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='rgba(14, 165, 233, 0.4)' stroke-width='1.5'/%3E%3C/svg%3E");
-    background-size: 60px 103.923px;
-  }
-
-  @keyframes float-fast {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(15px, -20px) rotate(10deg); }
-    50% { transform: translate(-10px, 15px) rotate(-5deg); }
-    75% { transform: translate(20px, 10px) rotate(8deg); }
-  }
-
-  .animate-float-fast {
-    animation: float-fast 5s ease-in-out infinite;
-  }
-
-  .benzene-ring-emerald {
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), transparent);
-    border: 2px solid rgba(16, 185, 129, 0.5);
-    position: relative;
-    filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.3));
-    transition: all 0.5s ease;
-  }
-
-  .benzene-ring-emerald:hover {
-    border-color: rgba(16, 185, 129, 0.8);
-    background: rgba(16, 185, 129, 0.35);
-    filter: drop-shadow(0 0 25px rgba(16, 185, 129, 0.6));
-    transform: scale(1.05);
-  }
-
-  .benzene-ring-emerald::after {
-    content: '';
-    position: absolute;
-    inset: 18%;
-    border-radius: 50%;
-    border: 1.5px solid rgba(16, 185, 129, 0.4);
-  }
-
-  /* Linear Alkane Chain */
-  .chem-chain {
-    height: 4px;
-    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.6), transparent);
-    position: relative;
-    transform: rotate(45deg);
-  }
-
-  .chem-chain::before, .chem-chain::after {
-    content: '';
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #38bdf8, #000);
-    top: -4px;
-  }
-  .chem-chain::before { left: 10%; }
-  .chem-chain::after { right: 10%; }
-
-  /* Triangular Structure */
-  .chem-triangle {
-    width: 0;
-    height: 0;
-    border-left: 25px solid transparent;
-    border-right: 25px solid transparent;
-    border-bottom: 43.3px solid rgba(99, 102, 241, 0.4);
-    position: relative;
-    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
-  }
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-2);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyan);
 }

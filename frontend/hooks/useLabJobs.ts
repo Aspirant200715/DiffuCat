@@ -1,44 +1,37 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
-import { LabJobSubmissionRequest, LabJobStatusResponse } from '@/lib/types';
+import { useDiscovery } from '@/store/discovery';
 import { toast } from 'sonner';
 
 export function useSubmitLabJob() {
+  const { addJobId } = useDiscovery();
   return useMutation({
-    mutationFn: (data: { candidates: string[] }) => {
-      // Map simple frontend form `{ candidates }` to backend expected shape
-      const payload: LabJobSubmissionRequest = {
-        smiles_list: data.candidates,
-        predicted_activity: data.candidates.map(() => 0.5),
-        predicted_selectivity: data.candidates.map(() => 0.5),
-        predicted_stability: data.candidates.map(() => 0.5),
-        priority: 'normal'
-      };
-      return api.submitLabJob(payload);
-    },
-    onError: (error) => {
-      toast.error('Lab Submission Failed', {
-        description: error instanceof Error ? error.message : 'An unknown error occurred',
-      });
-    },
+    mutationFn: (candidates: string[]) =>
+      api.labSubmit({
+        smiles_list: candidates,
+        predicted_activity: candidates.map(() => 0.5),
+        predicted_selectivity: candidates.map(() => 0.5),
+        predicted_stability: candidates.map(() => 0.5),
+        priority: 'normal',
+      }),
     onSuccess: (data) => {
-      toast.success('Job Submitted to Lab', {
-        description: `Job ID: ${data.job_id} is now queued.`,
-      });
+      if (data.job_id) {
+        addJobId(data.job_id);
+        toast.success(`Job ${data.job_id.substring(0, 8)} queued`);
+      }
     },
+    onError: (e: Error) => toast.error(e.message),
   });
 }
 
-export function useLabJobStatus(jobId: string | null) {
-  return useQuery<LabJobStatusResponse | null>({
-    queryKey: ['labJob', jobId],
-    queryFn: () => api.getLabJobStatus(jobId!),
+export function useLabJobStatus(jobId: string) {
+  return useQuery({
+    queryKey: ['lab', jobId],
+    queryFn: () => api.labStatus(jobId),
     enabled: !!jobId,
-    // Poll every 5 seconds if job is not completed or failed
-    refetchInterval: (query) => {
-      const status = query.state?.data?.status;
-      if (status === 'completed' || status === 'failed') return false;
-      return 5000;
+    refetchInterval: (q) => {
+      const s = q.state.data?.status;
+      return (s === 'completed' || s === 'failed') ? false : 3000;
     },
   });
 }
