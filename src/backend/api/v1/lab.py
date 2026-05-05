@@ -6,6 +6,9 @@ from src.backend.core.dependencies import get_current_user, get_backend_config
 from src.backend.core.config import BackendConfig
 from src.backend.services.lab_client import get_lab_client, LabResult
 from src.backend.core.security import TokenData
+from src.core.logger import setup_logger
+
+logger = setup_logger("api.v1.lab")
 
 router = APIRouter(prefix="/v1/lab", tags=["lab"])
 

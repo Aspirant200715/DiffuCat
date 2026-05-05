@@ -42,12 +42,45 @@ async def generate_candidates(
     try:
         result = pipeline.train_on_synthetic_data(request.n_candidates)
         return GenerateResponse(
-            status="success",
-            candidates_processed=result["candidates_processed"],
-            message=f"Generated {result['candidates_processed']} candidates for {request.target_reaction}"
+            status=result.get("status", "success"),
+            candidates_processed=result.get("candidates_processed", 0),
+            message=f"Generated {result.get('candidates_processed', 0)} candidates for {request.target_reaction}"
         )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Generation failed: {str(e)}"
+        )
+
+
+class TrainRequest(BaseModel):
+    n_candidates: int = 10
+
+
+class TrainResponse(BaseModel):
+    status: str
+    candidates_processed: int
+    message: str
+
+
+@router.post("/train", response_model=TrainResponse)
+async def train_pipeline(
+    request: TrainRequest,
+    pipeline: DiffuCatPipeline = Depends(get_pipeline),
+    user = Depends(get_current_user)
+):
+    """
+    Train the internal prediction model on synthetic data (development convenience).
+    """
+    try:
+        result = pipeline.train_on_synthetic_data(request.n_candidates)
+        return TrainResponse(
+            status="trained" if result.get("status") == "trained" else result.get("status"),
+            candidates_processed=result.get("candidates_processed", 0),
+            message=f"Pipeline trained on {result.get('candidates_processed', 0)} synthetic candidates"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Training failed: {str(e)}"
         )

@@ -4,6 +4,7 @@ from typing import List
 from src.backend.core.dependencies import get_current_user
 from src.backend.services.pipeline import DiffuCatPipeline
 from pydantic import BaseModel
+from typing import List, Optional
 
 router = APIRouter(prefix="/v1/predict", tags=["predict"])
 
@@ -19,6 +20,8 @@ class PredictionResult(BaseModel):
     uncertainty: dict
     synthetic_accessibility: float
     counterfactual_hint: str
+    ucb_score: Optional[float] = None
+    pareto_optimal: Optional[bool] = None
 
 class PredictResponse(BaseModel):
     predictions: List[PredictionResult]
@@ -45,6 +48,12 @@ async def predict_properties(
         
     try:
         results = pipeline.predict_with_uncertainty(request.smiles_list)
+        # Auto-rank: add UCB scores + Pareto optimality to each prediction
+        if results:
+            try:
+                results = pipeline.rank_candidates(results)
+            except Exception:
+                pass  # Ranking is optional; predictions still valid without it
         return PredictResponse(predictions=results)
     except Exception as e:
         raise HTTPException(

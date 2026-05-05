@@ -33,9 +33,23 @@ class CatalystTrainer:
         
         # Forward pass
         pred = self.model(batch.z, batch.pos, batch.edge_index, batch.edge_attr, batch.batch)
-        
+
+        # Ensure target tensor shape matches prediction shape.
+        # Some collators may flatten per-graph targets into a 1D tensor; reshape if needed.
+        target = getattr(batch, 'y', None)
+        if target is None:
+            raise RuntimeError('Batch missing target `y`')
+
+        # If target is 1D but total elements equal pred elements, reshape to pred shape
+        if target.dim() == 1 and target.numel() == pred.numel():
+            target = target.view(pred.size())
+
+        # If target has extra leading dimension (e.g., [batch_size * 1, num_targets]), try to reshape
+        if target.dim() == 2 and target.size(0) != pred.size(0) and target.numel() == pred.numel():
+            target = target.view(pred.size())
+
         # Multi-task MSE loss: [activity, selectivity, stability]
-        loss = nn.functional.mse_loss(pred, batch.y)
+        loss = nn.functional.mse_loss(pred, target)
         loss.backward()
         self.optimizer.step()
         

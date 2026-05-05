@@ -16,7 +16,13 @@ export default function DashboardPage() {
   const handlePredict = async (smilesList: string[]) => {
     try {
       const data = await predictMutation.mutateAsync({ smiles_list: smilesList });
-      setPredictions(data.predictions);
+      // Map backend response shape to frontend-expected shape
+      const mapped = data.predictions.map((p: PredictionResult) => ({
+        ...p,
+        // PredictionTable reads from `metrics` — map from backend `predictions`
+        metrics: p.predictions ?? p.metrics,
+      }));
+      setPredictions(mapped);
     } catch {
       // Error is handled in hook
     }

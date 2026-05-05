@@ -103,7 +103,11 @@ class MoleculeGraphProcessor:
             
             # Add target labels if provided
             if targets is not None:
-                graph.y = torch.tensor(targets[i], dtype=torch.float)
+                t = targets[i]
+                if isinstance(t, (list, tuple)):
+                    graph.y = torch.tensor(t, dtype=torch.float).unsqueeze(0)  # [1, N]
+                else:
+                    graph.y = torch.tensor([t], dtype=torch.float)  # [1]
                 
             data_list.append(graph)
             

@@ -72,7 +72,7 @@ export function PropertyRadar({ data }: PropertyRadarProps) {
       </CardHeader>
       <CardContent className="flex-1 flex items-center justify-center min-h-[250px]">
         {mounted && (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={250}>
             <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
               <PolarGrid stroke={gridColor} />
               <PolarAngleAxis dataKey="subject" tick={{ fill: textColor, fontSize: 11 }} />
