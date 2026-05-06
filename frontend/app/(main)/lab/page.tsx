@@ -1,13 +1,15 @@
 'use client';
 
-import { SubmissionForm } from '@/components/lab/SubmissionForm';
-import { JobCard } from '@/components/lab/JobCard';
 import { useDiscovery } from '@/store/discovery';
 import { useTrainModel } from '@/hooks/useLabJobs';
 import { Button } from '@/components/ui/button';
 import { Zap, HelpCircle, Layers, Database } from 'lucide-react';
-import { OptimizationConsole } from '@/components/lab/OptimizationConsole';
+import dynamic from 'next/dynamic';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+const SubmissionForm = dynamic(() => import('@/components/lab/SubmissionForm').then(mod => mod.SubmissionForm), { ssr: false });
+const JobCard = dynamic(() => import('@/components/lab/JobCard').then(mod => mod.JobCard), { ssr: false });
+const OptimizationConsole = dynamic(() => import('@/components/lab/OptimizationConsole').then(mod => mod.OptimizationConsole), { ssr: false });
 
 export default function LabPage() {
   const { jobIds } = useDiscovery();
@@ -30,9 +32,9 @@ export default function LabPage() {
                     <HelpCircle className="h-4 w-4 text-text-tertiary hover:text-emerald transition-colors" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="right" className="max-w-xs bg-surface-2 border-border p-3">
-                  <p className="text-xs leading-relaxed">
-                    The Forge is where digital candidates are sent for high-fidelity simulation. We use Density Functional Theory (DFT) to calculate real-world physical properties.
+                <TooltipContent side="right" className="max-w-xs bg-white border-white p-4 shadow-2xl">
+                  <p className="text-xs leading-relaxed text-black font-bold">
+                    The Forge is where digital candidates are sent for high-fidelity simulation. We use <span className="text-emerald font-black">Density Functional Theory (DFT)</span> to calculate real-world physical properties.
                   </p>
                 </TooltipContent>
               </Tooltip>

@@ -84,7 +84,7 @@ export function MoleculeInput() {
                 </span>
               </div>
             </TooltipTrigger>
-            <TooltipContent className="bg-surface-2 border-border text-xs text-text-primary max-w-[200px]">
+            <TooltipContent className="bg-white border-white text-xs text-black font-medium max-w-[200px] shadow-2xl">
                Let the AI propose novel catalyst structures based on learned patterns.
             </TooltipContent>
           </Tooltip>
@@ -107,13 +107,13 @@ export function MoleculeInput() {
                     <HelpCircle className="h-4 w-4 text-text-tertiary" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent className="max-w-xs p-4 bg-surface-2 border-border">
+                <TooltipContent className="max-w-xs p-4 bg-white border-white shadow-2xl">
                   <div className="space-y-2">
-                    <p className="text-xs font-bold text-cyan uppercase tracking-widest">What is SMILES?</p>
-                    <p className="text-[11px] leading-relaxed text-text-secondary">
+                    <p className="text-xs font-black text-cyan uppercase tracking-[0.2em]">What is SMILES?</p>
+                    <p className="text-[11px] leading-relaxed text-black font-medium">
                       Simplified Molecular Input Line Entry System. It's a notation for representing chemical structures as text strings. 
                       <br/><br/>
-                      Example: <span className="text-cyan font-mono">C1=CC=CC=C1</span> represents Benzene.
+                      Example: <span className="text-cyan font-bold font-mono">C1=CC=CC=C1</span> represents Benzene.
                     </p>
                   </div>
                 </TooltipContent>
@@ -137,8 +137,8 @@ export function MoleculeInput() {
                       <span className="text-[9px] opacity-60">{preset.value}</span>
                     </div>
                   </TooltipTrigger>
-                  <TooltipContent className="bg-surface-1 border-border">
-                    <span className="text-[11px]">{preset.desc}</span>
+                  <TooltipContent className="bg-white border-white shadow-2xl">
+                    <span className="text-[11px] text-black font-medium">{preset.desc}</span>
                   </TooltipContent>
                 </Tooltip>
               ))}

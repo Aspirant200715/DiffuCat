@@ -1,5 +1,7 @@
+"use client";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
+import { motion } from "framer-motion";
 
 export default function MainLayout({
   children,
@@ -32,7 +34,15 @@ export default function MainLayout({
              <div className="glow-orb w-[600px] h-[600px] bg-cyan/20 -top-40 -left-40 animate-pulse" />
              <div className="glow-orb w-[500px] h-[500px] bg-emerald/10 bottom-0 -right-20 animate-pulse" style={{ animationDelay: '2s' }} />
           </div>
-          {children}
+          <motion.div 
+            key="page-content"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="relative z-10"
+          >
+            {children}
+          </motion.div>
         </main>
       </div>
     </div>

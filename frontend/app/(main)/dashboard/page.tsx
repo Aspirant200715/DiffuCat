@@ -1,9 +1,5 @@
 'use client';
 
-import { MoleculeInput } from '@/components/discovery/MoleculeInput';
-import { PredictionTable } from '@/components/discovery/PredictionTable';
-import { PropertyRadar } from '@/components/visualization/PropertyRadar';
-import { DiscoveryFeed } from '@/components/discovery/DiscoveryFeed';
 import { useDiscovery } from '@/store/discovery';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -13,6 +9,10 @@ import { toast } from 'sonner';
 import { exportToCSV, exportToJSON } from '@/lib/export';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
+const MoleculeInput = dynamic(() => import('@/components/discovery/MoleculeInput').then(mod => mod.MoleculeInput), { ssr: false });
+const PredictionTable = dynamic(() => import('@/components/discovery/PredictionTable').then(mod => mod.PredictionTable), { ssr: false });
+const PropertyRadar = dynamic(() => import('@/components/visualization/PropertyRadar').then(mod => mod.PropertyRadar), { ssr: false });
+const DiscoveryFeed = dynamic(() => import('@/components/discovery/DiscoveryFeed').then(mod => mod.DiscoveryFeed), { ssr: false });
 const Molecule3DViewer = dynamic(() => import('@/components/visualization/Molecule3DViewer'), { ssr: false });
 
 export default function DashboardPage() {
@@ -61,11 +61,11 @@ export default function DashboardPage() {
                      <HelpCircle className="h-5 w-5 text-cyan" />
                    </div>
                  </TooltipTrigger>
-                 <TooltipContent side="right" className="max-w-md bg-surface-2 border-border p-5 shadow-2xl">
-                   <p className="text-sm leading-relaxed font-medium">
-                     The Discovery Engine uses advanced **Graph Neural Networks (GNN)** to simulate and predict the catalytic efficiency of molecular architectures in milliseconds.
-                   </p>
-                 </TooltipContent>
+                  <TooltipContent side="right" className="max-w-md bg-white border-white p-5 shadow-2xl">
+                    <p className="text-sm leading-relaxed font-bold text-black">
+                      The Discovery Engine uses advanced <span className="text-cyan font-black">Graph Neural Networks (GNN)</span> to simulate and predict the catalytic efficiency of molecular architectures in milliseconds.
+                    </p>
+                  </TooltipContent>
                </Tooltip>
             </div>
             <p className="text-lg md:text-xl text-text-secondary max-w-3xl leading-relaxed font-medium">
