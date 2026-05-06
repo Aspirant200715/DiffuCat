@@ -28,6 +28,8 @@ class PredictionResult(BaseModel):
     uncertainty: dict
     synthetic_accessibility: float
     counterfactual_hint: str
+    mol_block: Optional[str] = None
+    atom_uncertainty: Optional[List[float]] = None
     ucb_score: Optional[float] = None
     pareto_optimal: Optional[bool] = None
 

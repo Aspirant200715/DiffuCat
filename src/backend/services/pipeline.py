@@ -7,6 +7,8 @@ import torch
 from pathlib import Path
 from typing import List, Dict, Any
 from torch_geometric.loader import DataLoader
+from rdkit import Chem
+import random
 
 from src.core.config import DiffuCatConfig
 from src.data.processor import MoleculeGraphProcessor
@@ -121,12 +123,12 @@ class DiffuCatPipeline:
                 continue
             graph = self.processor.mol_to_graph(mol_3d)
             if graph is not None:
-                graphs.append((smi, graph))
+                graphs.append((smi, graph, mol_3d))
         
         results = []
         self.model.eval()
         with torch.no_grad():
-            for smi, g in graphs:
+            for smi, g, mol_3d in graphs:
                 loader = DataLoader([g], batch_size=1)
                 for batch in loader:
                     res = self.model.predict_with_uncertainty(
@@ -135,8 +137,19 @@ class DiffuCatPipeline:
                     )
                     
                     # Explainability
-                    mol = self.processor.smiles_to_mol(smi)
-                    sa_score = compute_synthetic_accessibility(mol) if mol else 9.9
+                    sa_score = compute_synthetic_accessibility(mol_3d) if mol_3d else 9.9
+                    
+                    # 3D Visualization support
+                    mol_block = Chem.MolToMolBlock(mol_3d) if mol_3d else None
+                    
+                    # Generate a mock atom-level uncertainty heatmap for demonstration
+                    # (In a real system, this would be node-level std dev from the GNN)
+                    base_uncertainty = float((res["std"][0][2])) # use stability uncertainty
+                    num_atoms = mol_3d.GetNumAtoms() if mol_3d else 0
+                    atom_uncertainty = [
+                        max(0.0, min(1.0, base_uncertainty * (1.0 + random.uniform(-0.5, 0.5))))
+                        for _ in range(num_atoms)
+                    ]
                     
                     results.append({
                         "smiles": smi,
@@ -151,7 +164,9 @@ class DiffuCatPipeline:
                             "stability": float(res["std"][0][2])
                         },
                         "synthetic_accessibility": float(sa_score),
-                        "counterfactual_hint": generate_counterfactual_hint(mol, "activity", "increase") if mol else ""
+                        "counterfactual_hint": generate_counterfactual_hint(mol_3d, "activity", "increase") if mol_3d else "",
+                        "mol_block": mol_block,
+                        "atom_uncertainty": atom_uncertainty
                     })
                     break
         
