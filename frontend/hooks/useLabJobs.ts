@@ -45,21 +45,34 @@ export function useLabResults(jobId: string) {
 }
 
 export function useRetrain() {
+  const { setTraining } = useDiscovery();
   return useMutation({
     mutationFn: (jobIds: string[]) => api.labRetrain(jobIds),
+    onMutate: () => setTraining(true),
     onSuccess: (data) => {
       toast.success(data.message || 'Active Learning fine-tuning queued');
+      // Keep training state for 5 seconds for visual feedback
+      setTimeout(() => setTraining(false), 5000);
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => {
+      toast.error(e.message);
+      setTraining(false);
+    },
   });
 }
 
 export function useTrainModel() {
+  const { setTraining } = useDiscovery();
   return useMutation({
     mutationFn: (n_candidates?: number) => api.train(n_candidates),
+    onMutate: () => setTraining(true),
     onSuccess: (data: any) => {
       toast.success(data.message || 'Base model training initiated');
+      setTimeout(() => setTraining(false), 8000);
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => {
+      toast.error(e.message);
+      setTraining(false);
+    },
   });
 }

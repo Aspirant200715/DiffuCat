@@ -1,11 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSubmitLabJob } from '@/hooks/useLabJobs';
+import { useSearchParams } from 'next/navigation';
 
 export function SubmissionForm() {
   const [input, setInput] = useState('');
+  const searchParams = useSearchParams();
   const submitMutation = useSubmitLabJob();
+
+  useEffect(() => {
+    const smiles = searchParams.get('smiles');
+    if (smiles) {
+      setInput(smiles);
+    }
+  }, [searchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
