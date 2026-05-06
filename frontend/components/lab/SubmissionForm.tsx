@@ -28,27 +28,27 @@ export function SubmissionForm() {
   return (
     <form onSubmit={handleSubmit} className="glass rounded-2xl border border-border/80 p-6 space-y-4">
       <div>
-        <div className="text-xs font-mono uppercase tracking-[0.3em] text-text-tertiary">New Lab Job</div>
-        <h3 className="text-lg font-semibold mt-2">Experimental Forge</h3>
-        <p className="text-sm text-text-secondary mt-2">Submit high-confidence candidates for synthesis.</p>
+        <div className="text-[13px] font-mono uppercase tracking-[0.4em] text-white/70 font-black">New Lab Job</div>
+        <h3 className="text-3xl font-black mt-4 text-white tracking-tighter">Experimental Forge</h3>
+        <p className="text-base font-bold text-white/80 mt-4 leading-relaxed">Submit high-confidence candidates for synthesis.</p>
       </div>
 
       <div>
-        <label className="block text-xs font-mono uppercase tracking-[0.3em] text-text-tertiary mb-2">Candidate SMILES</label>
+        <label className="block text-sm font-mono uppercase tracking-[0.4em] text-white/60 mb-4 font-black">Candidate SMILES</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="CCO, c1ccccc1, CC(=O)O"
-          className="w-full min-h-[140px] rounded-xl bg-surface-1/80 border border-border/70 p-3 text-sm font-mono text-text-primary focus:outline-none focus:border-cyan/60"
+          placeholder="CCO, c1ccccc1, CC(=O)O..."
+          className="w-full min-h-[180px] rounded-[28px] bg-void/50 border border-white/10 p-6 text-base font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-cyan/40 focus:bg-void/80 transition-all resize-none font-bold"
         />
       </div>
 
       <button
         type="submit"
         disabled={submitMutation.isPending || !input.trim()}
-        className="w-full h-11 rounded-full bg-cyan text-void font-semibold shadow-[0_0_20px_rgba(14,165,233,0.35)]"
+        className="w-full h-16 rounded-full bg-cyan text-void font-black uppercase tracking-[0.2em] text-base shadow-[0_0_30px_rgba(14,165,233,0.4)] hover:shadow-[0_0_50px_rgba(14,165,233,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:grayscale"
       >
-        {submitMutation.isPending ? 'Submitting…' : 'Queue for Synthesis'}
+        {submitMutation.isPending ? 'Submitting...' : 'Queue for Synthesis'}
       </button>
     </form>
   );

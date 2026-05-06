@@ -24,22 +24,24 @@ export default function LabPage() {
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <h2 className="text-3xl font-bold tracking-tight text-text-primary">Experimental Forge</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald to-white/80">
+                Experimental Forge
+              </h1>
               <Tooltip>
                 <TooltipTrigger>
-                  <div className="p-1 cursor-help">
-                    <HelpCircle className="h-4 w-4 text-text-tertiary hover:text-emerald transition-colors" />
+                  <div className="p-2 cursor-help bg-emerald/5 rounded-full border border-emerald/10 hover:bg-emerald/20 transition-all">
+                    <HelpCircle className="h-6 w-6 text-emerald" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="right" className="max-w-xs bg-white border-white p-4 shadow-2xl">
-                  <p className="text-xs leading-relaxed text-black font-bold">
+                <TooltipContent side="right" className="max-w-md bg-white border-white p-5 shadow-2xl">
+                  <p className="text-sm leading-relaxed font-bold text-black">
                     The Forge is where digital candidates are sent for high-fidelity simulation. We use <span className="text-emerald font-black">Density Functional Theory (DFT)</span> to calculate real-world physical properties.
                   </p>
                 </TooltipContent>
               </Tooltip>
             </div>
-            <p className="text-sm text-text-secondary max-w-xl">
+            <p className="text-lg md:text-xl text-white/70 max-w-3xl leading-relaxed font-bold">
               Queue candidates for physical validation. Results are used to retrain the AI models, creating a virtuous feedback loop of scientific discovery.
             </p>
           </div>
@@ -47,9 +49,9 @@ export default function LabPage() {
             variant="outline" 
             onClick={() => trainMutation.mutate(10)}
             disabled={trainMutation.isPending}
-            className="h-11 px-6 rounded-xl border-border/70 bg-surface-1/50 text-text-primary hover:bg-emerald/10 hover:text-emerald hover:border-emerald/50 gap-3 font-mono uppercase tracking-wider text-[10px] transition-all shadow-lg group"
+            className="h-16 px-10 rounded-[20px] border-emerald/30 bg-emerald/5 text-white hover:bg-emerald/10 hover:text-emerald hover:border-emerald/50 gap-4 font-mono font-black uppercase tracking-[0.2em] text-[13px] transition-all shadow-[0_0_20px_rgba(16,185,129,0.1)] hover:shadow-[0_0_40px_rgba(16,185,129,0.2)] group"
           >
-            <Zap className={`h-4 w-4 text-emerald ${trainMutation.isPending ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
+            <Zap className={`h-5 w-5 text-emerald ${trainMutation.isPending ? 'animate-pulse' : 'group-hover:scale-110 transition-transform'}`} />
             {trainMutation.isPending ? 'Optimizing Weights...' : 'Retrain AI Core'}
           </Button>
         </div>
@@ -100,7 +102,7 @@ export default function LabPage() {
             <div className="flex items-center justify-between">
               <h3 className="text-4xl font-black text-white flex items-center gap-6">
                 Synthesis Queue
-                <span className="text-sm font-mono font-black bg-cyan/10 px-6 py-2.5 rounded-full border border-cyan/40 text-cyan uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(14,165,233,0.1)]">
+                <span className="text-[13px] font-mono font-black bg-emerald/10 px-6 py-3 rounded-full border border-emerald/40 text-emerald uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:px-12 hover:bg-emerald/20 hover:border-emerald/60 hover:text-white transition-all duration-500 cursor-help">
                   {jobIds.length} ACTIVE JOBS
                 </span>
               </h3>
@@ -148,16 +150,16 @@ export default function LabPage() {
 
 function WorkflowStep({ num, title, desc, active }: { num: string; title: string; desc: string; active: boolean }) {
   return (
-    <div className="flex gap-6 relative group">
+    <div className="flex gap-8 relative group">
       <div className="flex flex-col items-center shrink-0">
-        <div className={`h-10 w-10 rounded-xl border text-xs font-bold flex items-center justify-center transition-all duration-500 ${active ? 'border-cyan/50 bg-cyan/10 text-cyan shadow-[0_0_20px_rgba(14,165,233,0.1)] group-hover:scale-110' : 'border-border/60 text-text-tertiary'}`}>
+        <div className={`h-12 w-12 rounded-2xl border-2 text-sm font-black flex items-center justify-center transition-all duration-500 ${active ? 'border-cyan/50 bg-cyan/10 text-cyan shadow-[0_0_20px_rgba(14,165,233,0.15)] group-hover:scale-110' : 'border-white/10 text-white/20'}`}>
           {num}
         </div>
-        <div className="w-px h-full bg-gradient-to-b from-border/60 to-transparent mt-3" />
+        <div className="w-0.5 h-full bg-gradient-to-b from-white/10 to-transparent mt-4" />
       </div>
-      <div className="flex-1 pb-10">
-        <div className={`text-sm font-black uppercase tracking-[0.2em] ${active ? 'text-white' : 'text-white/40'}`}>{title}</div>
-        <div className={`text-[13px] mt-3 leading-relaxed font-bold ${active ? 'text-white/70' : 'text-white/20'}`}>{desc}</div>
+      <div className="flex-1 pb-12">
+        <div className={`text-base font-black uppercase tracking-[0.25em] ${active ? 'text-white' : 'text-white/30'}`}>{title}</div>
+        <div className={`text-[14px] mt-4 leading-relaxed font-bold ${active ? 'text-white/80' : 'text-white/10'}`}>{desc}</div>
       </div>
     </div>
   );

@@ -54,30 +54,30 @@ export function OptimizationConsole() {
                 <Cpu className="h-4 w-4 text-cyan animate-spin" />
               </div>
               <div>
-                 <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-cyan">Active Optimization</div>
-                 <div className="text-sm font-bold text-text-primary">GNN Retraining Console</div>
+                 <div className="text-[12px] font-mono uppercase tracking-[0.4em] text-cyan font-black">Active Optimization</div>
+                 <div className="text-xl font-black text-white tracking-tight">GNN Retraining Console</div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-               <span className="text-[10px] font-mono text-text-tertiary">Engine: V2.1-AL</span>
-               <div className="h-1.5 w-1.5 rounded-full bg-cyan animate-pulse" />
+            <div className="flex items-center gap-3">
+               <span className="text-[11px] font-mono text-white/60 font-black uppercase tracking-[0.2em]">Engine: V2.1-AL</span>
+               <div className="h-2 w-2 rounded-full bg-cyan shadow-[0_0_10px_rgba(14,165,233,0.5)] animate-pulse" />
             </div>
           </div>
 
-          <div className="bg-black/40 rounded-xl border border-border/40 p-4 font-mono text-[11px] h-[160px] overflow-y-auto space-y-1.5 scrollbar-hide">
+          <div className="bg-black/40 rounded-xl border border-white/10 p-6 font-mono text-[13px] h-[180px] overflow-y-auto space-y-2 scrollbar-hide">
             {logs.map((log, i) => (
               <motion.div 
                 initial={{ opacity: 0, x: -5 }}
                 animate={{ opacity: 1, x: 0 }}
                 key={i} 
-                className="flex items-start gap-2 text-emerald/80"
+                className="flex items-start gap-3 text-emerald/90 font-bold"
               >
-                <ChevronRight className="h-3 w-3 mt-0.5 text-cyan shrink-0" />
+                <ChevronRight className="h-4 w-4 mt-0.5 text-cyan shrink-0" />
                 <span>{log}</span>
               </motion.div>
             ))}
-            <div className="flex items-center gap-2 text-cyan animate-pulse mt-2">
-               <Binary className="h-3 w-3" />
+            <div className="flex items-center gap-3 text-cyan animate-pulse mt-4 font-black">
+               <Binary className="h-4 w-4" />
                <span>SYSTEM BUSY...</span>
             </div>
           </div>
@@ -88,7 +88,7 @@ export function OptimizationConsole() {
                 <div className="h-1 w-8 rounded-full bg-cyan/40" />
                 <div className="h-1 w-8 rounded-full bg-cyan/20" />
              </div>
-             <div className="text-[9px] font-mono text-text-tertiary uppercase tracking-widest">
+             <div className="text-[11px] font-mono text-white/50 uppercase tracking-[0.2em] font-black">
                 Optimizing Weights based on Job Results
              </div>
           </div>

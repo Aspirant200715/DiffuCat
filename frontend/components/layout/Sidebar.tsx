@@ -26,7 +26,7 @@ export function Sidebar() {
             </div>
             <div className="hidden lg:block">
                <span className="text-2xl font-black tracking-tighter text-white block leading-none">Diffu<span className="text-cyan">Cat</span></span>
-               <span className="text-[11px] font-mono text-text-tertiary uppercase tracking-[0.4em] leading-none mt-2 block opacity-60">Discovery v2.1</span>
+               <span className="text-[11px] font-mono font-black text-white/60 uppercase tracking-[0.5em] leading-none mt-2.5 block">Discovery v2.1</span>
             </div>
           </Link>
         </div>
