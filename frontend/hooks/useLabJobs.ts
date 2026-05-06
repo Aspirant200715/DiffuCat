@@ -35,3 +35,31 @@ export function useLabJobStatus(jobId: string) {
     },
   });
 }
+
+export function useLabResults(jobId: string) {
+  return useQuery({
+    queryKey: ['lab-results', jobId],
+    queryFn: () => api.labResults(jobId),
+    enabled: !!jobId,
+  });
+}
+
+export function useRetrain() {
+  return useMutation({
+    mutationFn: (jobIds: string[]) => api.labRetrain(jobIds),
+    onSuccess: (data) => {
+      toast.success(data.message || 'Active Learning fine-tuning queued');
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
+export function useTrainModel() {
+  return useMutation({
+    mutationFn: (n_candidates?: number) => api.train(n_candidates),
+    onSuccess: (data: any) => {
+      toast.success(data.message || 'Base model training initiated');
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
