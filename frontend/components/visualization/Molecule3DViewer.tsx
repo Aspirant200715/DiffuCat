@@ -116,17 +116,39 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
     if (!viewerInstance.current) return;
     const viewer = viewerInstance.current;
     
-    // Only re-apply global styles if we don't have atom-specific uncertainty colors
-    if (!data?.atom_uncertainty) {
-      if (style === "stick") {
-        viewer.setStyle({}, { stick: { radius: 0.15 }, sphere: { radius: 0.4 } });
-      } else if (style === "sphere") {
-        viewer.setStyle({}, { sphere: {} });
-      } else if (style === "cross") {
-        viewer.setStyle({}, { cross: { linewidth: 2 } });
-      }
-      viewer.render();
+    // Reset all styles first to avoid overlapping styles
+    viewer.setStyle({}, {});
+    
+    if (style === "stick") {
+      viewer.setStyle({}, { stick: { radius: 0.15 }, sphere: { radius: 0.4 } });
+    } else if (style === "sphere") {
+      viewer.setStyle({}, { sphere: { radius: 0.8 } });
+    } else if (style === "cross") {
+      viewer.setStyle({}, { cross: { linewidth: 2 } });
     }
+
+    // Re-apply atom uncertainty colors if they exist
+    if (data?.atom_uncertainty && data.atom_uncertainty.length > 0) {
+      const atoms = viewer.getModel().selectedAtoms({});
+      if (atoms.length === data.atom_uncertainty.length) {
+        atoms.forEach((atom: any, i: number) => {
+          const u = data.atom_uncertainty![i];
+          const r = Math.min(255, Math.max(0, Math.floor(255 * u)));
+          const g = Math.min(255, Math.max(0, Math.floor(255 * (1 - u))));
+          const color = (r << 16) | (g << 8); 
+          
+          if (style === "stick") {
+            viewer.setStyle({ serial: atom.serial }, { sphere: { radius: 0.4, color }, stick: { radius: 0.15, color } });
+          } else if (style === "sphere") {
+            viewer.setStyle({ serial: atom.serial }, { sphere: { radius: 0.8, color } });
+          } else if (style === "cross") {
+            viewer.setStyle({ serial: atom.serial }, { cross: { linewidth: 2, color } });
+          }
+        });
+      }
+    }
+
+    viewer.render();
   }, [style, data]);
 
   useEffect(() => {
