@@ -122,19 +122,19 @@ export function PredictionTable() {
                   className={`group transition-all ${expanded === p.smiles ? 'bg-cyan/5' : 'hover:bg-surface-1/40 cursor-pointer'}`}
                   onClick={() => setExpanded(expanded === p.smiles ? null : p.smiles)}
                 >
-                  <td className="px-6 py-5 font-mono text-cyan transition-all group-hover:pl-8">
-                    <div className="flex items-center gap-2">
-                       <span className="h-1 w-0 group-hover:w-2 bg-cyan transition-all rounded-full" />
-                       <span className="truncate max-w-[180px] lg:max-w-[280px]">{p.smiles}</span>
+                  <td className="px-6 py-6 font-mono text-cyan transition-all group-hover:pl-8 text-sm">
+                    <div className="flex items-center gap-3">
+                       <span className="h-1.5 w-0 group-hover:w-3 bg-cyan transition-all rounded-full" />
+                       <span className="truncate max-w-[200px] lg:max-w-[320px]">{p.smiles}</span>
                     </div>
                   </td>
                   <MetricCell value={p.metrics?.activity ?? 0} unc={p.uncertainty?.activity ?? 0} color="bg-cyan" />
                   <MetricCell value={p.metrics?.selectivity ?? 0} unc={p.uncertainty?.selectivity ?? 0} color="bg-emerald" />
                   <MetricCell value={p.metrics?.stability ?? 0} unc={p.uncertainty?.stability ?? 0} color="bg-amber" />
-                  <td className="px-6 py-5 text-right font-mono font-bold text-amber">
+                  <td className="px-6 py-6 text-right font-mono font-bold text-amber text-sm">
                     {(p.ucb_score ?? 0).toFixed(3)}
                   </td>
-                  <td className="px-6 py-5 text-center">
+                  <td className="px-6 py-6 text-center">
                     <ParetoBadge optimal={p.pareto_optimal} />
                   </td>
                 </tr>
@@ -208,11 +208,11 @@ function HeaderCell({ label, onClick, active, tooltip, align = 'left' }: { label
   return (
     <th className={`px-6 py-4 ${align === 'right' ? 'text-right' : 'text-left'}`}>
       <Tooltip>
-        <TooltipTrigger asChild>
-          <button onClick={onClick} className="inline-flex items-center gap-2 group">
+        <TooltipTrigger>
+          <div onClick={onClick} className="inline-flex items-center gap-2 group cursor-pointer">
             <span className={active ? 'text-cyan font-bold' : 'group-hover:text-text-primary'}>{label}</span>
             <ChevronDown className={`h-3 w-3 transition-transform ${active ? 'text-cyan rotate-180' : 'text-text-tertiary group-hover:text-cyan'}`} />
-          </button>
+          </div>
         </TooltipTrigger>
         <TooltipContent className="bg-surface-2 border-border text-text-primary font-mono text-[10px] px-3 py-2">
           {tooltip}
@@ -224,13 +224,13 @@ function HeaderCell({ label, onClick, active, tooltip, align = 'left' }: { label
 
 function MetricCell({ value, unc, color }: { value: number; unc: number; color: string }) {
   return (
-    <td className="px-6 py-5">
-      <div className="flex flex-col gap-1.5 w-32">
+    <td className="px-6 py-6">
+      <div className="flex flex-col gap-2 w-36">
         <div className="flex items-center justify-between">
-           <span className="text-text-primary text-xs font-mono font-semibold">
+           <span className="text-text-primary text-sm font-mono font-semibold">
             {value.toFixed(3)}
           </span>
-          <span className="text-text-tertiary text-[10px] font-mono">
+          <span className="text-text-tertiary text-xs font-mono">
             ±{unc.toFixed(2)}
           </span>
         </div>

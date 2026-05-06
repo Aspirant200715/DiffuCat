@@ -64,12 +64,24 @@ export function Sidebar() {
         {/* System & Utils */}
         <div className="mt-10 px-4 flex flex-col gap-1.5">
            <div className="hidden lg:block text-[10px] font-mono uppercase tracking-[0.3em] text-text-tertiary mb-3 ml-3">System Control</div>
-           <Link href="#" className="flex items-center gap-4 px-4 py-3 text-sm text-text-tertiary hover:text-text-primary transition-all group">
-              <ShieldCheck className="h-5 w-5 group-hover:text-emerald transition-colors" />
+           <Link 
+             href="/auth" 
+             className={cn(
+               "flex items-center gap-4 px-4 py-3 text-sm transition-all group rounded-xl",
+               pathname === '/auth' ? "bg-emerald/10 text-emerald" : "text-text-tertiary hover:text-text-primary hover:bg-surface-2/40"
+             )}
+           >
+              <ShieldCheck className={cn("h-5 w-5", pathname === '/auth' ? "text-emerald" : "group-hover:text-emerald")} />
               <span className="hidden lg:block font-medium">Auth & Privacy</span>
            </Link>
-           <Link href="#" className="flex items-center gap-4 px-4 py-3 text-sm text-text-tertiary hover:text-text-primary transition-all group">
-              <Settings className="h-5 w-5 group-hover:text-cyan transition-colors" />
+           <Link 
+             href="/settings" 
+             className={cn(
+               "flex items-center gap-4 px-4 py-3 text-sm transition-all group rounded-xl",
+               pathname === '/settings' ? "bg-cyan/10 text-cyan" : "text-text-tertiary hover:text-text-primary hover:bg-surface-2/40"
+             )}
+           >
+              <Settings className={cn("h-5 w-5", pathname === '/settings' ? "text-cyan" : "group-hover:text-cyan")} />
               <span className="hidden lg:block font-medium">Global Settings</span>
            </Link>
         </div>
