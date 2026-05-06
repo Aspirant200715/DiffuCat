@@ -26,7 +26,7 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
       if (!targetSmiles) setIsLoading(false);
       return;
     }
-    
+
     setIsLoading(true);
 
     if (viewerInstance.current) {
@@ -50,7 +50,7 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
             const g = Math.min(255, Math.max(0, Math.floor(255 * (1 - u))));
             const color = (r << 16) | (g << 8); // hex color
             viewerObj.setStyle(
-              { serial: atom.serial }, 
+              { serial: atom.serial },
               { sphere: { radius: 0.4, color }, stick: { radius: 0.15, color } }
             );
           });
@@ -78,7 +78,7 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
           throw new Error("Failed to fetch 3D structure");
         }
         const sdfData = await response.text();
-        
+
         viewer.addModel(sdfData, "sdf");
         viewer.setStyle({}, { stick: { radius: 0.15 }, sphere: { radius: 0.4 } });
         applyAtomUncertainty(viewer);
@@ -115,10 +115,10 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
   useEffect(() => {
     if (!viewerInstance.current) return;
     const viewer = viewerInstance.current;
-    
+
     // Reset all styles first to avoid overlapping styles
     viewer.setStyle({}, {});
-    
+
     if (style === "stick") {
       viewer.setStyle({}, { stick: { radius: 0.15 }, sphere: { radius: 0.4 } });
     } else if (style === "sphere") {
@@ -135,8 +135,8 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
           const u = data.atom_uncertainty![i];
           const r = Math.min(255, Math.max(0, Math.floor(255 * u)));
           const g = Math.min(255, Math.max(0, Math.floor(255 * (1 - u))));
-          const color = (r << 16) | (g << 8); 
-          
+          const color = (r << 16) | (g << 8);
+
           if (style === "stick") {
             viewer.setStyle({ serial: atom.serial }, { sphere: { radius: 0.4, color }, stick: { radius: 0.15, color } });
           } else if (style === "sphere") {
@@ -158,7 +158,7 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
         viewerInstance.current.render();
       }
     };
-    
+
     let timeoutId: NodeJS.Timeout;
     const debouncedResize = () => {
       clearTimeout(timeoutId);
@@ -206,60 +206,64 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
           </div>
         </div>
       )}
-      
+
       {targetSmiles && (
-        <div className="absolute top-4 left-4 z-20 flex flex-col gap-1 pointer-events-none">
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-text-tertiary">Active Topology</div>
-          <div className="px-3 py-1.5 rounded-lg bg-black/60 backdrop-blur-md border border-cyan/20 text-cyan font-mono text-xs shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+        <div className="absolute top-6 left-6 z-20 flex flex-col gap-2 pointer-events-none">
+          <div className="text-[12px] font-mono uppercase tracking-[0.4em] text-white/60 font-black">Active Topology</div>
+          <div className="px-4 py-2 rounded-xl bg-black/60 backdrop-blur-md border border-cyan/30 text-cyan font-mono text-[13px] font-black shadow-[0_0_20px_rgba(6,182,212,0.15)]">
             {targetSmiles}
           </div>
         </div>
       )}
 
       {data?.atom_uncertainty && (
-        <div className="absolute top-2 right-2 flex items-center gap-2 text-[10px] font-mono text-text-secondary z-20 bg-black/40 px-2 py-1 rounded">
-            <span className="w-2 h-2 rounded-full bg-[#00ff00]"></span> Confident
-            <span className="w-2 h-2 rounded-full bg-[#ff0000] ml-2"></span> Uncertain
+        <div className="absolute top-6 right-6 flex items-center gap-4 text-[12px] font-mono text-white font-black z-20 bg-black/40 px-4 py-2 rounded-xl shadow-xl border border-white/10">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#00ff00] shadow-[0_0_10px_#00ff00]"></span> Confident
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#ff0000] shadow-[0_0_10px_#ff0000]"></span> Uncertain
+          </div>
         </div>
       )}
 
-      <div 
-        ref={viewerRef} 
+      <div
+        ref={viewerRef}
         className="w-full h-full transition-all duration-700"
         style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
       />
-      
+
       {/* Floating Controls Overlay */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-1.5 rounded-full bg-surface-1/80 backdrop-blur-md border border-border/50 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-20">
         <div className="flex bg-void/50 rounded-full p-0.5">
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => setStyle("stick")}
             className={`h-7 px-3 text-xs rounded-full ${style === 'stick' ? 'bg-surface-2 text-cyan shadow-sm' : 'text-text-secondary'}`}
           >
             Stick
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => setStyle("sphere")}
             className={`h-7 px-3 text-xs rounded-full ${style === 'sphere' ? 'bg-surface-2 text-cyan shadow-sm' : 'text-text-secondary'}`}
           >
             Sphere
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => setStyle("cross")}
             className={`h-7 px-3 text-xs rounded-full ${style === 'cross' ? 'bg-surface-2 text-cyan shadow-sm' : 'text-text-secondary'}`}
           >
             Cross
           </Button>
         </div>
-        
+
         <div className="w-px h-4 bg-border/50 mx-1" />
-        
+
         <div className="flex items-center gap-1 text-text-secondary">
           <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:text-cyan hover:bg-cyan/10" onClick={() => handleZoom('out')}>
             <ZoomOut className="w-3.5 h-3.5" />
@@ -273,5 +277,9 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
         </div>
       </div>
     </div>
+  );
+}
+      </div >
+    </div >
   );
 }

@@ -99,13 +99,13 @@ export default function DashboardPage() {
                 <div className="px-6 py-4 border-b border-border/70 bg-surface-1/40 flex items-center justify-between">
                    <div className="flex items-center gap-2">
                       <TrendingUp className="h-4 w-4 text-emerald animate-pulse" />
-                      <span className="text-sm font-bold">Structural Analysis</span>
+                      <span className="text-base font-black text-white tracking-tight">Structural Analysis</span>
                    </div>
-                   {topCandidate && (
-                     <div className="text-[10px] font-mono text-cyan truncate max-w-[200px] bg-cyan/5 px-2 py-1 rounded">
-                        SMILES: {topCandidate.smiles}
-                     </div>
-                   )}
+                    {topCandidate && (
+                      <div className="text-[11px] font-mono text-white/80 font-black truncate max-w-[240px] bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 uppercase tracking-wider">
+                         SMILES: {topCandidate.smiles}
+                      </div>
+                    )}
                 </div>
                 <div className="flex-1 min-h-[300px] relative">
                   {topCandidate ? (
