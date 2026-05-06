@@ -157,7 +157,7 @@ export default function HeroSection() {
             className="group px-12 py-6 rounded-full border-3 border-white/20 text-white font-black uppercase tracking-[0.2em] text-lg flex items-center gap-6 bg-white/5 backdrop-blur-3xl hover:bg-white/10 hover:border-white transition-all shadow-xl"
           >
             <Play className="h-6 w-6 fill-current transition-transform group-hover:scale-125" /> 
-            WATCH DEMO
+            Explore Pipeline
           </Link>
         </motion.div>
 

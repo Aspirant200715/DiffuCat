@@ -1,5 +1,5 @@
 'use client';
-
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const catalysts = [
@@ -10,6 +10,14 @@ const catalysts = [
 ];
 
 export default function CatalystTicker() {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <div className="absolute inset-0 z-1 pointer-events-none overflow-hidden opacity-[0.07] select-none">
       {Array.from({ length: 20 }).map((_, i) => (

@@ -62,9 +62,9 @@ export default function LabPage() {
             <SubmissionForm />
             
             <div className="glass rounded-2xl border border-border/80 p-8 bg-gradient-to-b from-cyan/5 to-transparent shadow-xl">
-              <div className="flex items-center gap-3 mb-8">
-                <Layers className="h-5 w-5 text-cyan" />
-                <div className="text-sm font-mono uppercase tracking-[0.3em] text-text-tertiary">Forge Pipeline</div>
+              <div className="flex items-center gap-4 mb-10">
+                <Layers className="h-6 w-6 text-cyan" />
+                <div className="text-xs font-mono uppercase tracking-[0.4em] text-white/70 font-black">Forge Pipeline</div>
               </div>
               <div className="space-y-10">
                 <WorkflowStep 
@@ -98,9 +98,9 @@ export default function LabPage() {
           {/* Right Column: Job Monitoring */}
           <div className="lg:col-span-3 space-y-8">
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-bold text-text-primary flex items-center gap-4">
+              <h3 className="text-4xl font-black text-white flex items-center gap-6">
                 Synthesis Queue
-                <span className="text-xs font-mono font-bold bg-surface-2 px-4 py-2 rounded-full border border-border/60 text-cyan">
+                <span className="text-sm font-mono font-black bg-cyan/10 px-6 py-2.5 rounded-full border border-cyan/40 text-cyan uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(14,165,233,0.1)]">
                   {jobIds.length} ACTIVE JOBS
                 </span>
               </h3>
@@ -111,24 +111,24 @@ export default function LabPage() {
                 <div className="w-24 h-24 rounded-3xl bg-surface-2 border border-border/50 flex items-center justify-center mb-10 group-hover:scale-110 group-hover:border-cyan/50 transition-all duration-500 shadow-2xl">
                    <Database className="h-12 w-12 text-text-tertiary opacity-30 group-hover:text-cyan group-hover:opacity-100 transition-all" />
                 </div>
-                <h4 className="text-xl font-bold text-text-primary">Your Forge is Quiet</h4>
-                <p className="text-base text-text-tertiary mt-4 max-w-[360px] leading-relaxed">
+                <h4 className="text-3xl font-black text-white tracking-tight">Your Forge is Quiet</h4>
+                <p className="text-lg text-white/70 mt-6 max-w-[420px] leading-relaxed font-bold">
                   Start your discovery journey by entering SMILES on the dashboard or using the submission form on the left.
                 </p>
-                <div className="mt-12 flex gap-6">
-                   <div className="flex flex-col items-center gap-3">
-                      <div className="h-1.5 w-1.5 rounded-full bg-cyan" />
-                      <span className="text-[11px] font-mono text-text-tertiary uppercase tracking-widest">Digital Input</span>
+                <div className="mt-14 flex gap-10">
+                   <div className="flex flex-col items-center gap-4">
+                      <div className="h-2 w-2 rounded-full bg-cyan shadow-[0_0_10px_rgba(14,165,233,0.5)]" />
+                      <span className="text-xs font-mono text-white/60 font-black uppercase tracking-[0.2em]">Digital Input</span>
                    </div>
-                   <div className="w-10 h-px bg-border/40 mt-1.5" />
-                   <div className="flex flex-col items-center gap-3">
-                      <div className="h-1.5 w-1.5 rounded-full bg-emerald" />
-                      <span className="text-[11px] font-mono text-text-tertiary uppercase tracking-widest">Forge Queue</span>
+                   <div className="w-12 h-px bg-white/10 mt-2.5" />
+                   <div className="flex flex-col items-center gap-4">
+                      <div className="h-2 w-2 rounded-full bg-emerald shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                      <span className="text-xs font-mono text-white/60 font-black uppercase tracking-[0.2em]">Forge Queue</span>
                    </div>
-                   <div className="w-10 h-px bg-border/40 mt-1.5" />
-                   <div className="flex flex-col items-center gap-3">
-                      <div className="h-1.5 w-1.5 rounded-full bg-amber" />
-                      <span className="text-[11px] font-mono text-text-tertiary uppercase tracking-widest">Lab Data</span>
+                   <div className="w-12 h-px bg-white/10 mt-2.5" />
+                   <div className="flex flex-col items-center gap-4">
+                      <div className="h-2 w-2 rounded-full bg-amber shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+                      <span className="text-xs font-mono text-white/60 font-black uppercase tracking-[0.2em]">Lab Data</span>
                    </div>
                 </div>
               </div>
@@ -156,8 +156,8 @@ function WorkflowStep({ num, title, desc, active }: { num: string; title: string
         <div className="w-px h-full bg-gradient-to-b from-border/60 to-transparent mt-3" />
       </div>
       <div className="flex-1 pb-10">
-        <div className={`text-sm font-bold uppercase tracking-widest ${active ? 'text-text-primary' : 'text-text-tertiary'}`}>{title}</div>
-        <div className="text-[13px] text-text-secondary mt-2.5 leading-relaxed font-medium">{desc}</div>
+        <div className={`text-sm font-black uppercase tracking-[0.2em] ${active ? 'text-white' : 'text-white/40'}`}>{title}</div>
+        <div className={`text-[13px] mt-3 leading-relaxed font-bold ${active ? 'text-white/70' : 'text-white/20'}`}>{desc}</div>
       </div>
     </div>
   );

@@ -47,7 +47,7 @@ export default function DashboardPage() {
         {/* Header with educational subtext */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <div className="flex items-center gap-4 mb-2">
+            <div className="flex items-center gap-4 mb-6">
                <motion.h1 
                  initial={{ opacity: 0, y: -20 }}
                  animate={{ opacity: 1, y: 0 }}
@@ -111,22 +111,22 @@ export default function DashboardPage() {
                   {topCandidate ? (
                      <Molecule3DViewer data={topCandidate} />
                   ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-void/40 backdrop-blur-sm">
-                       <div className="w-16 h-16 rounded-2xl border border-dashed border-border/60 flex items-center justify-center mb-6 group-hover:border-cyan/40 transition-all duration-500">
-                          <Info className="h-8 w-8 text-text-tertiary opacity-30 group-hover:text-cyan group-hover:opacity-100 transition-all" />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center bg-void/40 backdrop-blur-sm">
+                       <div className="w-24 h-24 rounded-[32px] border-2 border-dashed border-border/60 flex items-center justify-center mb-8 group-hover:border-cyan/40 transition-all duration-500 shadow-inner">
+                          <Info className="h-12 w-12 text-text-tertiary opacity-30 group-hover:text-cyan group-hover:opacity-100 transition-all" />
                        </div>
-                       <h3 className="text-sm font-bold text-text-primary mb-2">Renderer Standby</h3>
-                       <p className="text-xs font-mono text-text-tertiary max-w-[240px] leading-relaxed">
+                       <h3 className="text-2xl font-black text-white mb-6 tracking-tight">Renderer Standby</h3>
+                       <p className="text-sm font-mono text-white/90 max-w-[360px] leading-relaxed font-bold">
                           Input molecular SMILES in the terminal to visualize 3D conformers and uncertainty heatmaps.
                        </p>
                     </div>
                   )}
                 </div>
-                <div className="px-6 py-3 bg-surface-1/40 border-t border-border/70 flex items-center justify-between">
-                   <span className="text-[9px] font-mono uppercase tracking-widest text-text-tertiary">3D Conformer Projection</span>
-                   <div className="flex items-center gap-1.5">
-                      <div className="h-1 w-1 rounded-full bg-emerald" />
-                      <span className="text-[9px] font-mono text-emerald">Ready</span>
+                <div className="px-6 py-4 bg-surface-1/40 border-t border-border/70 flex items-center justify-between">
+                   <span className="text-[12px] font-mono uppercase tracking-[0.4em] text-white/60 font-black">3D Conformer Projection</span>
+                   <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-emerald shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                      <span className="text-[11px] font-mono font-black text-emerald uppercase tracking-widest">System Ready</span>
                    </div>
                 </div>
              </div>
@@ -165,14 +165,14 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between mb-6">
                    <div className="flex items-center gap-2">
                       <Trophy className="h-4 w-4 text-amber" />
-                      <div className="text-xs font-mono uppercase tracking-[0.2em] text-text-tertiary">Discovery Rankings</div>
+                      <div className="text-xs font-mono uppercase tracking-[0.2em] text-white/50 font-bold">Discovery Rankings</div>
                    </div>
                    <span className="text-[9px] font-mono text-amber font-bold">UCB OPTIMIZED</span>
                 </div>
                 <div className="space-y-3">
                   {topUcb.length === 0 ? (
-                    <div className="py-10 text-center border border-dashed border-border/40 rounded-xl bg-void/20">
-                       <span className="text-[10px] font-mono text-text-tertiary">Waiting for engine output...</span>
+                    <div className="py-14 text-center border border-dashed border-border/40 rounded-xl bg-void/20">
+                       <span className="text-sm font-black font-mono text-white/80 uppercase tracking-[0.2em]">Waiting for engine output...</span>
                     </div>
                   ) : (
                     topUcb.map((p, idx) => (

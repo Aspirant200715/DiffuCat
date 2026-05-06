@@ -43,18 +43,18 @@ export function PredictionTable() {
         <div className="w-16 h-16 rounded-full bg-surface-2 border border-border/50 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-cyan/50 transition-all duration-500">
            <Database className="h-8 w-8 text-text-tertiary group-hover:text-cyan transition-colors" />
         </div>
-        <h3 className="text-xl font-semibold text-text-primary mb-2">No Candidates Screened</h3>
-        <p className="text-sm text-text-secondary max-w-sm mb-8">
+        <h3 className="text-xl font-semibold text-white mb-2">No Candidates Screened</h3>
+        <p className="text-sm text-white/70 max-w-sm mb-8">
           Enter a SMILES string or use the AI Generator in the terminal above to start the discovery process.
         </p>
         <div className="flex gap-4">
-           <div className="px-4 py-2 rounded-xl bg-surface-2 border border-border text-xs font-mono text-text-tertiary">
+           <div className="px-4 py-2 rounded-xl bg-surface-2 border border-border text-xs font-mono text-white/60">
               1. Input SMILES
            </div>
-           <div className="px-4 py-2 rounded-xl bg-surface-2 border border-border text-xs font-mono text-text-tertiary">
+           <div className="px-4 py-2 rounded-xl bg-surface-2 border border-border text-xs font-mono text-white/60">
               2. Run Engine
            </div>
-           <div className="px-4 py-2 rounded-xl bg-surface-2 border border-border text-xs font-mono text-text-tertiary">
+           <div className="px-4 py-2 rounded-xl bg-surface-2 border border-border text-xs font-mono text-white/60">
               3. View Results
            </div>
         </div>
@@ -72,7 +72,7 @@ export function PredictionTable() {
           </div>
           <button
             onClick={() => setParetoOnly((v) => !v)}
-            className={`text-[10px] font-mono uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border transition-all ${paretoOnly ? 'bg-cyan/10 border-cyan text-cyan' : 'border-border/70 text-text-tertiary hover:border-cyan/50 hover:text-cyan'}`}
+            className={`text-[10px] font-mono uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border transition-all ${paretoOnly ? 'bg-cyan/10 border-cyan text-cyan' : 'border-border/70 text-white/40 hover:border-cyan/50 hover:text-cyan'}`}
           >
             {paretoOnly ? 'Showing Pareto Front Only' : 'Show Pareto Front'}
           </button>
@@ -80,7 +80,7 @@ export function PredictionTable() {
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="text-[10px] font-mono uppercase tracking-[0.3em] text-text-tertiary bg-surface-1/30">
+            <thead className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/40 bg-surface-1/30">
               <tr>
                 <th className="px-6 py-4 text-left font-bold">SMILES Architecture</th>
                 <HeaderCell 
@@ -164,8 +164,8 @@ export function PredictionTable() {
                             "{p.counterfactual_hint || 'No counterfactual hint available for this architecture.'}"
                           </div>
                         </div>
-                        <div className="flex items-center gap-4 text-xs font-mono text-text-tertiary">
-                           <span>Graph Hash: {Math.random().toString(16).substring(2, 10)}</span>
+                        <div className="flex items-center gap-4 text-xs font-mono text-white/30">
+                           <span>Graph Hash: {p.smiles.split('').reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) | 0, 7).toString(16).substring(0, 8)}</span>
                            <span>|</span>
                            <span className="text-cyan">Confidence: {(100 - (p.uncertainty?.activity || 0) * 100).toFixed(1)}%</span>
                         </div>

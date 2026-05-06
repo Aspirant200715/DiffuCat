@@ -11,7 +11,23 @@ export default function MoleculePage({ params }: { params: { id: string } }) {
   const decodedSmiles = decodeURIComponent(params.id);
   const { predictions } = useDiscovery();
   const prediction = useMemo(() => predictions.find((p) => p.smiles === decodedSmiles), [predictions, decodedSmiles]);
-  const fingerprint = useMemo(() => Array.from({ length: 32 }, () => (Math.random() > 0.5 ? 1 : 0)), []);
+  const fingerprint = useMemo(() => {
+    // Deterministic fingerprint based on SMILES string to avoid hydration mismatch
+    let hash = 0;
+    for (let i = 0; i < decodedSmiles.length; i++) {
+      hash = ((hash << 5) - hash) + decodedSmiles.charCodeAt(i);
+      hash |= 0;
+    }
+    return Array.from({ length: 32 }, (_, i) => ((Math.abs(hash) >> i) & 1));
+  }, [decodedSmiles]);
+
+  const molecularWeight = useMemo(() => {
+    let hash = 7;
+    for (let i = 0; i < decodedSmiles.length; i++) {
+      hash = hash * 31 + decodedSmiles.charCodeAt(i);
+    }
+    return (100 + (Math.abs(hash) % 200) + (Math.abs(hash) % 100) / 100).toFixed(2);
+  }, [decodedSmiles]);
 
   return (
     <div className="space-y-6">
@@ -36,7 +52,7 @@ export default function MoleculePage({ params }: { params: { id: string } }) {
             <div className="mt-4 space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-text-secondary">Molecular Weight</span>
-                <span className="text-text-primary">{(100 + Math.random() * 200).toFixed(2)} g/mol</span>
+                <span className="text-text-primary">{molecularWeight} g/mol</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-text-secondary">SA Score</span>

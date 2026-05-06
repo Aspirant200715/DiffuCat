@@ -66,8 +66,8 @@ export function MoleculeInput() {
               <Terminal className="h-6 w-6 text-cyan" />
             </div>
             <div>
-              <div className="text-sm font-mono uppercase tracking-[0.4em] text-text-tertiary">Control Interface</div>
-              <div className="text-xl font-black tracking-tight text-text-primary">Molecular Architecture Terminal</div>
+              <div className="text-sm font-mono uppercase tracking-[0.4em] text-cyan/70 font-bold">Control Interface</div>
+              <div className="text-xl font-black tracking-tight text-white mt-1">Molecular Architecture Terminal</div>
             </div>
           </div>
           
@@ -97,7 +97,7 @@ export function MoleculeInput() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Enter SMILES notation (e.g., CCO, c1ccccc1)..."
-              className="w-full min-h-[200px] pl-16 pr-4 py-6 bg-void/50 border border-cyan/10 rounded-[32px] font-mono text-lg text-text-primary placeholder:text-text-tertiary/40 outline-none focus:border-cyan/40 focus:bg-void/80 transition-all resize-none shadow-inner"
+              className="w-full min-h-[200px] pl-16 pr-4 py-6 bg-void/50 border border-cyan/10 rounded-[32px] font-mono text-lg text-white placeholder:text-white/20 outline-none focus:border-cyan/40 focus:bg-void/80 transition-all resize-none shadow-inner"
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handlePredict())}
             />
             <div className="absolute bottom-6 right-6">
@@ -122,8 +122,8 @@ export function MoleculeInput() {
           </div>
 
           <div className="space-y-4">
-            <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-text-tertiary flex items-center gap-2">
-               Educational Presets <div className="h-px flex-1 bg-border/40" />
+            <div className="text-[12px] font-mono uppercase tracking-[0.4em] text-white/60 font-black flex items-center gap-2">
+               Educational Presets <div className="h-px flex-1 bg-white/10" />
             </div>
             <div className="flex flex-wrap gap-3">
               {presets.map((preset) => (
@@ -131,10 +131,14 @@ export function MoleculeInput() {
                   <TooltipTrigger>
                     <div
                       onClick={() => appendPreset(preset.value)}
-                      className="px-4 py-2.5 rounded-xl bg-surface-2/30 border border-border/70 text-xs font-mono text-text-secondary hover:text-cyan hover:border-cyan/40 hover:bg-cyan/5 transition-all flex flex-col items-start gap-1 cursor-pointer"
+                      className="px-6 py-4 rounded-[20px] bg-surface-2/30 border border-border/70 text-sm font-mono text-text-secondary hover:text-cyan hover:border-cyan/40 hover:bg-cyan/5 transition-all flex flex-col items-start gap-1.5 cursor-pointer group/preset"
                     >
-                      <span className="font-bold text-[10px] text-text-primary">{preset.label}</span>
-                      <span className="text-[9px] opacity-60">{preset.value}</span>
+                      <span className="font-black text-[16px] text-white group-hover/preset:text-cyan transition-colors">
+                        {preset.label}
+                      </span>
+                      <span className="text-[12px] text-white/70 tracking-tight font-black font-mono">
+                        {preset.value}
+                      </span>
                     </div>
                   </TooltipTrigger>
                   <TooltipContent className="bg-white border-white shadow-2xl">
@@ -154,11 +158,11 @@ export function MoleculeInput() {
                 className="p-6 rounded-2xl bg-cyan/5 border border-cyan/20 space-y-5"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Activity className="h-4 w-4 text-cyan animate-pulse" />
-                    <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-cyan font-bold">Inference Engine Active</span>
+                  <div className="flex items-center gap-4">
+                    <Activity className="h-5 w-5 text-cyan animate-pulse" />
+                    <span className="text-[12px] font-mono uppercase tracking-[0.3em] text-cyan font-black">Inference Engine Active</span>
                   </div>
-                  <span className="text-[10px] font-mono text-text-tertiary">{Math.round(((currentStep + 1) / steps.length) * 100)}%</span>
+                  <span className="text-[12px] font-mono text-white font-black">{Math.round(((currentStep + 1) / steps.length) * 100)}%</span>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
@@ -198,8 +202,8 @@ export function MoleculeInput() {
 
         <div className="px-8 py-6 border-t border-border/70 bg-surface-1/40 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="h-3 w-3 rounded-full bg-emerald shadow-[0_0_15px_rgba(16,185,129,0.6)] animate-pulse" />
-            <span className="text-xs font-mono uppercase tracking-[0.3em] text-text-tertiary">NVIDIA A100 GPU: ACTIVE</span>
+            <div className="h-3 w-3 rounded-full bg-emerald shadow-[0_0_15px_rgba(16,185,129,0.7)] animate-pulse" />
+            <span className="text-[11px] font-mono font-black uppercase tracking-[0.4em] text-white/60">NVIDIA A100 GPU: ACTIVE</span>
           </div>
           <button
             onClick={handlePredict}

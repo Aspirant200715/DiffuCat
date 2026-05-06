@@ -10,7 +10,7 @@ interface PropertyRadarProps {
 export function PropertyRadar({ data }: PropertyRadarProps) {
   if (!data.length) {
     return (
-      <div className="glass rounded-2xl border border-border/80 p-6 h-[320px] flex items-center justify-center text-text-tertiary font-mono text-xs">
+      <div className="glass rounded-2xl border border-border/80 p-6 h-[320px] flex items-center justify-center text-white/80 font-black font-mono text-sm uppercase tracking-[0.2em]">
         Radar telemetry standby
       </div>
     );
@@ -28,7 +28,7 @@ export function PropertyRadar({ data }: PropertyRadarProps) {
 
   return (
     <div className="glass rounded-2xl border border-border/80 p-6">
-      <div className="text-xs font-mono uppercase tracking-[0.3em] text-text-tertiary">Batch Radar</div>
+      <div className="text-xs font-mono uppercase tracking-[0.3em] text-white/50 font-bold">Batch Radar</div>
       <div className="mt-4 h-[240px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={chartData} outerRadius="75%">
