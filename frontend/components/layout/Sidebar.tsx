@@ -22,7 +22,7 @@ export function Sidebar() {
         <div className="flex items-center justify-center lg:justify-start px-6 pb-10">
           <Link href="/" className="flex items-center gap-4 group">
             <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-cyan/30 to-emerald/20 border border-cyan/40 flex items-center justify-center shadow-[0_0_25px_rgba(14,165,233,0.3)] group-hover:scale-105 transition-all duration-500">
-              <Atom className="h-6 w-6 text-cyan group-hover:rotate-180 transition-all duration-700" />
+              <FlaskConical className="h-6 w-6 text-cyan group-hover:rotate-180 transition-all duration-700" />
             </div>
             <div className="hidden lg:block">
                <span className="text-xl font-black tracking-tighter text-white block">Diffu<span className="text-cyan">Cat</span></span>

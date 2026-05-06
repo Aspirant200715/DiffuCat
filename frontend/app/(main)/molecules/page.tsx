@@ -1,7 +1,7 @@
 'use client';
 
 import { useDiscovery } from '@/store/discovery';
-import { Database, Filter, Search, ArrowUpRight } from 'lucide-react';
+import { Database, Filter, Search, ArrowUpRight, FlaskConical } from 'lucide-react';
 import Link from 'next/link';
 
 export default function MoleculesPage() {
@@ -44,9 +44,9 @@ export default function MoleculesPage() {
               className="glass group rounded-[24px] border border-border/80 p-6 bg-surface-1/30 hover:border-cyan/40 hover:bg-surface-1/50 transition-all shadow-lg hover:shadow-cyan/5"
             >
               <div className="flex items-start justify-between">
-                 <div className="h-10 w-10 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan">
-                    <Atom className="h-5 w-5" />
-                 </div>
+                  <div className="h-10 w-10 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan">
+                    <FlaskConical className="h-5 w-5" />
+                  </div>
                  <ArrowUpRight className="h-4 w-4 text-text-tertiary group-hover:text-cyan transition-all" />
               </div>
               
@@ -77,4 +77,3 @@ export default function MoleculesPage() {
   );
 }
 
-import { Atom } from 'lucide-react';
