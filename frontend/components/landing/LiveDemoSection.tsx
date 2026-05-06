@@ -70,84 +70,130 @@ export default function LiveDemoSection() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4">
-      <div className="relative group">
-        {/* Glow Background */}
-        <div className="absolute -inset-1 bg-emerald/20 blur-2xl rounded-[32px] opacity-50 group-hover:opacity-75 transition-opacity" />
-        
-        <div className="relative glass rounded-[32px] p-8 border border-white/5 bg-void/50 backdrop-blur-2xl">
-          <div className="flex flex-col md:flex-row gap-4 items-stretch">
-            <div className="flex-1 relative">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 h-16 text-sm font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/50 transition-all"
-                placeholder="Enter SMILES (e.g. CCO, c1ccccc1)"
-              />
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black uppercase tracking-widest text-white/20 pointer-events-none">
-                3D-SDF Input
-              </div>
-            </div>
-            <button
-              onClick={handlePredict}
-              disabled={isPredicting}
-              className="h-16 px-10 rounded-2xl bg-emerald text-void font-black uppercase tracking-widest text-xs shadow-[0_0_30px_rgba(16,185,129,0.3)] flex items-center justify-center gap-4 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
-            >
-              {isPredicting ? (
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 border-2 border-void/30 border-t-void rounded-full animate-spin" />
-                  Predicting...
-                </div>
-              ) : (
-                <>
-                  Inference Engine <ArrowRight className="h-4 w-4" />
-                </>
-              )}
-            </button>
-          </div>
+    <div className="max-w-5xl mx-auto px-4 relative">
+      {/* Decorative Scientific Background Element */}
+      <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-sky-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-          <div className="mt-12">
-            <AnimatePresence mode="wait">
-              {results.length === 0 ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center py-20 border-2 border-dashed border-white/5 rounded-[24px] bg-white/[0.02]"
-                >
-                  <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6">
-                    <Activity className="w-8 h-8 text-white/20" />
-                  </div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">
-                    Awaiting Discovery Substrate
-                  </div>
-                </motion.div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {results.map((res, idx) => (
-                    <motion.div
-                      key={res.smiles + idx}
-                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ delay: idx * 0.15 }}
-                      className="relative p-6 rounded-[24px] bg-white/[0.03] border border-white/10 hover:border-emerald/30 transition-all group/card overflow-hidden"
-                    >
-                      {/* Card Shine */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-emerald/5 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity" />
-                      
-                      <div className="relative z-10">
-                        <div className="font-mono text-[10px] text-emerald truncate mb-6">{res.smiles}</div>
-                        <div className="space-y-6">
-                          <MetricBar label="Activity" value={res.metrics.activity} icon={<Zap className="w-3 h-3" />} />
-                          <MetricBar label="Selectivity" value={res.metrics.selectivity} icon={<Activity className="w-3 h-3" />} />
-                          <MetricBar label="Stability" value={res.metrics.stability} icon={<ShieldCheck className="w-3 h-3" />} />
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
+      <div className="relative group">
+        {/* Advanced Multi-Layer Glow */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-emerald/20 via-sky-500/10 to-emerald/20 blur-3xl rounded-[40px] opacity-30 group-hover:opacity-50 transition-all duration-700" />
+        
+        <div className="relative rounded-[32px] p-1 md:p-[1px] bg-gradient-to-br from-white/10 via-white/[0.02] to-transparent shadow-2xl">
+          <div className="relative glass rounded-[31px] p-8 md:p-12 border border-white/5 bg-[#010409]/80 backdrop-blur-3xl overflow-hidden">
+            {/* Subtle Inner Grid Pattern */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                 style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+
+            <div className="flex flex-col lg:flex-row gap-6 items-stretch relative z-10">
+              <div className="flex-1 group/input relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald/0 via-emerald/20 to-emerald/0 rounded-2xl opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500 blur-sm" />
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  className="relative w-full bg-black/40 border border-white/10 rounded-2xl px-8 h-20 text-sm font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 transition-all shadow-inner"
+                  placeholder="Enter SMILES (e.g. CCO, c1ccccc1)"
+                />
+                <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-4 pointer-events-none">
+                  <div className="h-4 w-[1px] bg-white/10" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30">
+                    SDF-3D Pipeline
+                  </span>
                 </div>
-              )}
-            </AnimatePresence>
+              </div>
+
+              <button
+                onClick={handlePredict}
+                disabled={isPredicting}
+                className="h-20 px-12 rounded-2xl bg-gradient-to-r from-emerald to-emerald-400 text-void font-black uppercase tracking-[0.4em] text-[10px] shadow-[0_0_40px_rgba(16,185,129,0.2)] flex items-center justify-center gap-4 transition-all hover:scale-[1.02] hover:shadow-[0_0_50px_rgba(16,185,129,0.4)] active:scale-[0.98] disabled:opacity-50"
+              >
+                {isPredicting ? (
+                  <div className="flex items-center gap-4">
+                    <div className="w-5 h-5 border-2 border-void/30 border-t-void rounded-full animate-spin" />
+                    Analyzing...
+                  </div>
+                ) : (
+                  <>
+                    Run Inference <ArrowRight className="h-4 w-4 stroke-[3]" />
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="mt-12 relative z-10">
+              <AnimatePresence mode="wait">
+                {results.length === 0 ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    className="flex flex-col items-center justify-center py-24 rounded-[28px] border border-white/5 bg-gradient-to-b from-white/[0.01] to-transparent relative overflow-hidden group/scanner"
+                  >
+                    {/* Animated Scanning Line */}
+                    <motion.div 
+                      animate={{ y: [0, 200, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-emerald/20 to-transparent pointer-events-none"
+                    />
+                    
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-emerald/20 blur-2xl animate-pulse" />
+                      <div className="relative w-20 h-20 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center mb-8 group-hover/scanner:border-emerald/40 transition-colors duration-500">
+                        <Activity className="w-10 h-10 text-emerald animate-pulse" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 text-center">
+                      <div className="text-[11px] font-black uppercase tracking-[0.6em] text-white/40 group-hover/scanner:text-emerald/60 transition-colors">
+                        Ready for Discovery Substrate
+                      </div>
+                      <div className="text-[9px] font-mono text-white/20 uppercase tracking-[0.2em]">
+                        Waiting for valid SMILES input...
+                      </div>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {results.map((res, idx) => (
+                      <motion.div
+                        key={res.smiles + idx}
+                        initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ 
+                          type: "spring",
+                          stiffness: 100,
+                          damping: 20,
+                          delay: idx * 0.1 
+                        }}
+                        className="relative p-8 rounded-[28px] bg-black/40 border border-white/10 hover:border-emerald/40 transition-all group/card overflow-hidden shadow-2xl"
+                      >
+                        {/* High-End Card Glow */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald/5 blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-700" />
+                        
+                        <div className="relative z-10">
+                          <div className="flex items-center justify-between mb-8">
+                            <div className="h-8 px-4 rounded-full bg-emerald/10 border border-emerald/20 flex items-center">
+                              <span className="text-[9px] font-mono text-emerald font-black uppercase tracking-widest">Candidate {idx + 1}</span>
+                            </div>
+                            <div className="w-2 h-2 rounded-full bg-emerald animate-pulse" />
+                          </div>
+
+                          <div className="font-mono text-[10px] text-white/60 bg-white/5 px-4 py-3 rounded-xl border border-white/5 truncate mb-8 group-hover/card:text-white transition-colors">
+                            {res.smiles}
+                          </div>
+
+                          <div className="space-y-8">
+                            <MetricBar label="Catalytic Activity" value={res.metrics.activity} icon={<Zap className="w-4 h-4" />} color="text-emerald" />
+                            <MetricBar label="Selectivity Index" value={res.metrics.selectivity} icon={<Activity className="w-4 h-4" />} color="text-sky-400" />
+                            <MetricBar label="Structural Stability" value={res.metrics.stability} icon={<ShieldCheck className="w-4 h-4" />} color="text-purple-400" />
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
@@ -155,22 +201,25 @@ export default function LiveDemoSection() {
   );
 }
 
-function MetricBar({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
+function MetricBar({ label, value, icon, color }: { label: string; value: number; icon: React.ReactNode; color: string }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-white/40">{icon}</span>
-          <span className="text-[9px] font-black uppercase tracking-widest text-white/40">{label}</span>
+        <div className="flex items-center gap-3">
+          <span className={`${color} opacity-80 group-hover:scale-110 transition-transform`}>{icon}</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/50">{label}</span>
         </div>
-        <span className="text-[10px] font-mono text-white font-bold">{(value * 100).toFixed(1)}%</span>
+        <div className="flex items-baseline gap-1">
+          <span className="text-[14px] font-mono text-white font-black">{(value * 100).toFixed(1)}</span>
+          <span className="text-[9px] font-mono text-white/40">%</span>
+        </div>
       </div>
-      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden p-[1px]">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${value * 100}%` }}
-          transition={{ duration: 1.5, ease: 'easeOut', delay: 0.5 }}
-          className="h-full bg-emerald shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+          transition={{ duration: 2, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
+          className={`h-full rounded-full bg-gradient-to-r ${color === 'text-emerald' ? 'from-emerald-600 to-emerald-400' : color === 'text-sky-400' ? 'from-sky-600 to-sky-400' : 'from-purple-600 to-purple-400'} shadow-[0_0_15px_rgba(16,185,129,0.3)]`}
         />
       </div>
     </div>

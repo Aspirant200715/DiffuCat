@@ -43,11 +43,34 @@ export default function HeroSection() {
         )}
       </AnimatePresence>
 
-      {/* Main Content Layer */}
+      {/* Multi-Layered Masterpiece Background */}
       <div className="absolute inset-0 z-0">
-        <ChemBackground3D />
-        <QuantumMeshBackground />
-        <div className="absolute inset-0 z-1 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,255,198,0.05)_0%,transparent_70%)]" />
+        {/* Layer 1: High-Detail Crystalline & Data Stream Texture */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={stage !== 'intro' ? { opacity: 0.6 } : { opacity: 0 }}
+          transition={{ duration: 2.5 }}
+          className="absolute inset-0 contrast-110 brightness-105"
+          style={{ 
+            backgroundImage: 'url("/next_gen_chem_bg.png")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            mixBlendMode: 'screen'
+          }}
+        />
+        
+        {/* Layer 2: Subtle 3D Floating Chemistry (Parallax) */}
+        <motion.div
+           initial={{ opacity: 0 }}
+           animate={stage !== 'intro' ? { opacity: 0.2 } : { opacity: 0 }}
+           transition={{ duration: 3, delay: 1 }}
+           className="absolute inset-0"
+        >
+          <ChemBackground3D />
+        </motion.div>
+
+        {/* Layer 3: Ultra-Deep Radial Vignette */}
+        <div className="absolute inset-0 z-1 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,#010409_100%)] opacity-90" />
       </div>
       
       <motion.div 
@@ -85,12 +108,12 @@ export default function HeroSection() {
             hidden: { opacity: 0, scale: 0.95 },
             visible: { opacity: 1, scale: 1 }
           }}
-          animate={{ color: stage === 'overlay' ? '#0EA5E9' : '#FFFFFF' }}
-          transition={{ duration: 0.8 }}
-          className="font-display font-black leading-[0.9] tracking-tighter"
+          className="font-display font-black leading-[0.9] tracking-tighter drop-shadow-[0_10px_40px_rgba(0,0,0,0.8)]"
           style={{ fontSize: 'clamp(4rem, 12vw, 9rem)' }}
         >
-          Diffu<span className={stage === 'overlay' ? 'text-[#0EA5E9]' : 'text-transparent bg-clip-text bg-gradient-to-br from-cyan via-cyan to-emerald drop-shadow-[0_0_40px_rgba(0,255,198,0.3)]'}>Cat</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-sky-400">
+            DiffuCat
+          </span>
         </motion.h1>
 
         <motion.div
@@ -110,9 +133,7 @@ export default function HeroSection() {
             hidden: { opacity: 0, y: 20 },
             visible: { opacity: 1, y: 0 }
           }}
-          animate={{ color: stage === 'overlay' ? '#94A3B8' : 'rgba(255,255,255,0.8)' }}
-          transition={{ duration: 0.8 }}
-          className="mt-8 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-medium"
+          className="mt-8 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-bold text-white drop-shadow-[0_2px_15px_rgba(0,0,0,1)] bg-black/40 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/5"
         >
           The world's first uncertainty-aware generative AI platform for high-throughput catalyst discovery.
         </motion.p>
@@ -149,16 +170,16 @@ export default function HeroSection() {
           className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-32 max-w-4xl mx-auto"
         >
           <div className="flex flex-col items-center group">
-            <div className="text-6xl font-black font-sans tracking-tighter text-white group-hover:text-neon-teal transition-colors drop-shadow-[0_0_20px_rgba(0,255,198,0.2)]">99.8%</div>
-            <div className="text-sm font-black uppercase tracking-[0.4em] mt-4 text-white/70">Stability Index</div>
+            <div className="text-6xl font-black font-sans tracking-tighter text-white group-hover:text-neon-teal transition-colors drop-shadow-[0_4px_15px_rgba(0,0,0,1)]">99.8%</div>
+            <div className="text-sm font-black uppercase tracking-[0.4em] mt-4 text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">Stability Index</div>
           </div>
           <div className="flex flex-col items-center group">
-            <div className="text-6xl font-black font-sans tracking-tighter text-white group-hover:text-emerald transition-colors drop-shadow-[0_0_20px_rgba(16,185,129,0.2)]">10<sup className="text-4xl">60</sup></div>
-            <div className="text-sm font-black uppercase tracking-[0.4em] mt-4 text-white/70">Candidates</div>
+            <div className="text-6xl font-black font-sans tracking-tighter text-white group-hover:text-emerald transition-colors drop-shadow-[0_4px_15px_rgba(0,0,0,1)]">10<sup className="text-4xl">60</sup></div>
+            <div className="text-sm font-black uppercase tracking-[0.4em] mt-4 text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">Candidates</div>
           </div>
           <div className="flex flex-col items-center group">
-            <div className="text-6xl font-black font-sans tracking-tighter text-white group-hover:text-quantum-purple transition-colors drop-shadow-[0_0_20px_rgba(139,92,246,0.2)]">&lt;1s</div>
-            <div className="text-sm font-black uppercase tracking-[0.4em] mt-4 text-white/70">Inference Speed</div>
+            <div className="text-6xl font-black font-sans tracking-tighter text-white group-hover:text-quantum-purple transition-colors drop-shadow-[0_4px_15px_rgba(0,0,0,1)]">&lt;1s</div>
+            <div className="text-sm font-black uppercase tracking-[0.4em] mt-4 text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">Inference Speed</div>
           </div>
         </motion.div>
       </motion.div>

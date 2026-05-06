@@ -77,14 +77,14 @@ export default function ChemBackground3D() {
   const colors = ["#00FFC6", "#3B82F6", "#8B5CF6"];
 
   const denseMolecules = useMemo(() => {
-    return Array.from({ length: 70 }).map((_, i) => ({
+    return Array.from({ length: 120 }).map((_, i) => ({
       position: [
-        (Math.random() - 0.5) * 90,
-        (Math.random() - 0.5) * 70,
-        -15 - Math.random() * 40
+        (Math.random() - 0.5) * 100,
+        (Math.random() - 0.5) * 80,
+        -10 - Math.random() * 50
       ] as [number, number, number],
       type: moleculeTypes[Math.floor(Math.random() * moleculeTypes.length)],
-      scale: 0.2 + Math.random() * 0.5,
+      scale: 0.3 + Math.random() * 0.7,
       color: colors[Math.floor(Math.random() * colors.length)]
     }));
   }, []);
@@ -92,11 +92,10 @@ export default function ChemBackground3D() {
 
   return (
     <div className="absolute inset-0 z-0">
-      <Canvas camera={{ position: [0, 0, 25], fov: 45 }}>
-        <color attach="background" args={['#010409']} />
-        <ambientLight intensity={1} />
-        <pointLight position={[10, 10, 10]} intensity={2} color="#00FFC6" />
-        <pointLight position={[-10, -10, -10]} intensity={1.5} color="#3B82F6" />
+      <Canvas camera={{ position: [0, 0, 25], fov: 45 }} alpha={true}>
+        <ambientLight intensity={1.5} />
+        <pointLight position={[10, 10, 10]} intensity={3} color="#00FFC6" />
+        <pointLight position={[-10, -10, -10]} intensity={2} color="#3B82F6" />
         
         <group>
           {/* Main Focused Molecules (Peripheral Clusters) */}
@@ -105,7 +104,7 @@ export default function ChemBackground3D() {
           <Molecule type="benzene" position={[18, -12, -6]} scale={1.1} color="#3B82F6" />
           <Molecule type="methane" position={[22, 12, -10]} scale={1.4} color="#00FFC6" />
 
-          {/* High Density Molecular Field - Fills the screen */}
+          {/* High Density Molecular Field - Fills the screen with 'bubbles' */}
           {denseMolecules.map((m, i) => (
             <Molecule key={i} {...m} />
           ))}
