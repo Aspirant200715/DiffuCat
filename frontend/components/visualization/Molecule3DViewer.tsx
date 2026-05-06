@@ -185,6 +185,15 @@ export default function Molecule3DViewer({ data, smiles }: Molecule3DViewerProps
         </div>
       )}
       
+      {targetSmiles && (
+        <div className="absolute top-4 left-4 z-20 flex flex-col gap-1 pointer-events-none">
+          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-text-tertiary">Active Topology</div>
+          <div className="px-3 py-1.5 rounded-lg bg-black/60 backdrop-blur-md border border-cyan/20 text-cyan font-mono text-xs shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+            {targetSmiles}
+          </div>
+        </div>
+      )}
+
       {data?.atom_uncertainty && (
         <div className="absolute top-2 right-2 flex items-center gap-2 text-[10px] font-mono text-text-secondary z-20 bg-black/40 px-2 py-1 rounded">
             <span className="w-2 h-2 rounded-full bg-[#00ff00]"></span> Confident
