@@ -10,14 +10,13 @@ export function usePredict() {
     mutationFn: async (smiles_list: string[]) => {
       try {
         const data = await api.predictSync(smiles_list);
-        if (data.detail?.includes('Model must be trained') || data.message?.includes('Model must be trained')) {
-          throw new Error('needs_training');
-        }
         return data;
       } catch (e: any) {
-        if (e.message === 'needs_training' || String(e).includes('trained')) {
+        const msg = typeof e === 'object' ? (e.message || JSON.stringify(e)) : String(e);
+        // If the model hasn't been trained yet, auto-train and retry
+        if (msg.includes('trained') || msg.includes('Model must be trained')) {
           setTraining(true);
-          toast.loading('Training model on synthetic data…', { id: 'train-toast' });
+          toast.loading('Training model on synthetic data...', { id: 'train-toast' });
           await api.train(10);
           setTraining(false);
           toast.success('Model ready!', { id: 'train-toast' });
@@ -27,10 +26,15 @@ export function usePredict() {
       }
     },
     onSuccess: (data) => {
-      if (!data.predictions) return;
+      if (!data?.predictions) return;
+      // Map backend "predictions" key to frontend "metrics" alias
       const mapped = data.predictions.map((p: any) => ({
         ...p,
-        metrics: p.predictions ?? p.metrics,
+        metrics: p.predictions ?? p.metrics ?? {
+          activity: 0,
+          selectivity: 0,
+          stability: 0,
+        },
       }));
       setPredictions(mapped);
       toast.success(`${mapped.length} candidates predicted`);
