@@ -5,6 +5,9 @@ import { PredictionTable } from '@/components/discovery/PredictionTable';
 import { PropertyRadar } from '@/components/visualization/PropertyRadar';
 import { useDiscovery } from '@/store/discovery';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+const Molecule3DViewer = dynamic(() => import('@/components/visualization/Molecule3DViewer'), { ssr: false });
 
 export default function DashboardPage() {
   const { predictions } = useDiscovery();
@@ -18,6 +21,12 @@ export default function DashboardPage() {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div className="lg:col-span-8 space-y-8">
         <MoleculeInput />
+        
+        {/* 3D Catalyst Viewer Feature */}
+        <div className="h-[400px]">
+          <Molecule3DViewer data={topCandidate} />
+        </div>
+
         <PredictionTable />
       </div>
 
