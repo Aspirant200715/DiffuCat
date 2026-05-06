@@ -1,6 +1,10 @@
 # src/backend/main.py
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from src.backend.core.config import BackendConfig
 try:
     from src.backend.api.v1 import generate, predict, rank, lab

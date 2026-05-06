@@ -1,5 +1,8 @@
 import os
 from celery import Celery
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Use Redis as the broker. Fallback to a dummy memory broker if necessary, 
 # but Redis is standard for production.

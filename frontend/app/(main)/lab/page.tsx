@@ -3,16 +3,31 @@
 import { SubmissionForm } from '@/components/lab/SubmissionForm';
 import { JobCard } from '@/components/lab/JobCard';
 import { useDiscovery } from '@/store/discovery';
+import { useTrainModel } from '@/hooks/useLabJobs';
+import { Button } from '@/components/ui/button';
+import { Zap } from 'lucide-react';
 
 export default function LabPage() {
   const { jobIds } = useDiscovery();
+  const trainMutation = useTrainModel();
 
   return (
     <div className="relative space-y-8">
       <div className="absolute inset-0 -z-10 opacity-20 bg-[url('/chem-flasks.svg')] bg-cover bg-center" />
-      <div>
-        <h2 className="text-3xl font-semibold">Experimental Forge</h2>
-        <p className="text-text-secondary mt-2">Queue synthesis jobs and track the lab feedback loop.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-semibold text-text-primary">Experimental Forge</h2>
+          <p className="text-text-secondary mt-2">Queue synthesis jobs and track the lab feedback loop.</p>
+        </div>
+        <Button 
+          variant="outline" 
+          onClick={() => trainMutation.mutate(10)}
+          disabled={trainMutation.isPending}
+          className="h-11 rounded-xl border-border/70 bg-surface-1/50 text-text-primary hover:bg-cyan/10 hover:text-cyan hover:border-cyan/50 gap-2 font-mono uppercase tracking-wider text-xs"
+        >
+          <Zap className={`h-4 w-4 ${trainMutation.isPending ? 'animate-pulse' : ''}`} />
+          {trainMutation.isPending ? 'Training...' : 'Train Base Model'}
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
