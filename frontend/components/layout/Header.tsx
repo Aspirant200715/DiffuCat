@@ -43,6 +43,7 @@ export function Header() {
                 onClick={() => toast.info('System Telemetry', {
                   description: 'Latency: 24ms | GPU Load: 42% | Nodes: 12 Active',
                   duration: 5000,
+                  descriptionClassName: "text-white/60",
                   style: { 
                     background: '#010409', 
                     color: '#0EA5E9', 
@@ -96,6 +97,7 @@ export function Header() {
                 onClick={() => toast.success('Profile Synchronized', {
                   description: 'Authenticated as: Mahak Lab (Enterprise Tier)',
                   duration: 5000,
+                  descriptionClassName: "text-white/60",
                   style: { 
                     background: '#010409', 
                     color: '#10B981', 
