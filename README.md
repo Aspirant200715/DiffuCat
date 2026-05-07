@@ -7,8 +7,8 @@
 ## 🚀 Deployment Status
 | Service | Status | Link |
 | :--- | :--- | :--- |
-| **Scientific Dashboard** | 🟢 Live | [INSERT_DEPLOYED_LINK_HERE] |
-| **Inference Engine** | 🟢 Operational | [INSERT_API_LINK_HERE] |
+| **Scientific Dashboard** | 🟢 Live | https://diffucat.vercel.app/ |
+| **Inference Engine** | 🟢 Operational | https://diffucat-fastapi.onrender.com |
 
 ---
 
