@@ -60,6 +60,7 @@ def _run_local_prediction_fallback(job_id: str, smiles_list: List[str], pipeline
         _fallback_jobs[job_id] = {"status": "FAILURE", "error": str(e)}
 
 @router.post("/", response_model=PredictResponse)
+@router.post("/sync", response_model=PredictResponse)
 async def predict_properties_sync(
     request: PredictRequest,
     pipeline: DiffuCatPipeline = Depends(get_pipeline),

@@ -16,8 +16,10 @@ class ApiError extends Error {
   }
 }
 
-async function fetchWithHandler(endpoint: string, options?: RequestInit) {
-  const url = `${API_BASE}${endpoint}`;
+async function fetchWithHandler(endpoint: string, options: RequestInit = {}) {
+  const cleanBase = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${cleanBase}${cleanEndpoint}`;
   try {
     const response = await fetch(url, {
       ...options,
