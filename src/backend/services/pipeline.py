@@ -68,7 +68,7 @@ class DiffuCatPipeline:
         """
         from src.core.logger import setup_logger
         logger = setup_logger("pipeline")
-        logger.info(f"🔄 Fine-tuning model on {len(smiles_list)} lab-validated candidates...")
+        logger.info("Fine-tuning model on " + str(len(smiles_list)) + " lab-validated candidates...")
         
         if not self.model:
             self.model = CatalystPropertyPredictor(self.mvp_config)
@@ -83,7 +83,7 @@ class DiffuCatPipeline:
         trainer.train(train_loader, epochs=3)
         
         self._is_trained = True
-        logger.info("✅ Model fine-tuning complete.")
+        logger.info("Model fine-tuning complete.")
         return {
             "status": "fine_tuned",
             "candidates_processed": len(graphs),

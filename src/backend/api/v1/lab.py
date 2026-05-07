@@ -163,9 +163,9 @@ async def _async_retrain_loop(job_ids: List[str], lab_client, pipeline: DiffuCat
                         targets_list.append([r.activity, r.selectivity, r.stability])
         
         if smiles_list:
-            logger.info(f"🧠 Active Learning: Fetched {len(smiles_list)} valid results from DFT/Lab. Initiating fine-tuning...")
+            logger.info("Active Learning: Fetched " + str(len(smiles_list)) + " valid results from DFT/Lab. Initiating fine-tuning...")
             pipeline.fine_tune(smiles_list, targets_list)
-            logger.info("🎉 Active Learning loop successfully incorporated new data into the model!")
+            logger.info("Active Learning loop successfully incorporated new data into the model!")
         else:
             logger.warning("No valid lab results found for the provided job IDs.")
     except Exception as e:

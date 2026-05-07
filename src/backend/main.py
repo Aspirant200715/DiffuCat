@@ -8,10 +8,15 @@ load_dotenv()
 from src.backend.core.config import BackendConfig
 try:
     from src.backend.api.v1 import generate, predict, rank, lab
-except Exception:
+except Exception as e:
+    import logging
+    logging.error(f"Failed to import API routers: {e}")
     generate = predict = rank = lab = None
 
 from src.backend.websockets import visualization
+
+import os
+PORT = int(os.environ.get("PORT", 8002))
 
 config = BackendConfig.load("configs/backend.yaml")
 
@@ -60,4 +65,4 @@ async def websocket_viz_endpoint(websocket: WebSocket, user_id: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("src.backend.main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("src.backend.main:app", host="0.0.0.0", port=PORT, reload=True)
