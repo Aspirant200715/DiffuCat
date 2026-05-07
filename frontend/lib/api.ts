@@ -2,6 +2,13 @@ import { PredictRequest, PredictResponse, LabJobSubmissionRequest, LabJobSubmiss
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002';
 
+if (typeof window !== 'undefined') {
+  console.log(`[DiffuCat] API Base URL: ${API_BASE}`);
+  if (API_BASE.includes('localhost') && window.location.hostname !== 'localhost') {
+    console.error('[DiffuCat] WARNING: Frontend is running on a remote host but API_BASE is pointing to localhost. Did you forget to set NEXT_PUBLIC_API_URL on Vercel?');
+  }
+}
+
 class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
@@ -92,4 +99,8 @@ export const api = {
 
   labRetrain: (jobIds: string[]): Promise<{ status: string; message: string }> =>
     fetchWithHandler('/v1/lab/retrain', { method: 'POST', body: JSON.stringify(jobIds) }),
+
+  // Health
+  health: (): Promise<{ status: string; version: string }> =>
+    fetchWithHandler('/health'),
 };
