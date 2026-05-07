@@ -6,12 +6,37 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from src.backend.core.config import BackendConfig
+import logging
+logger = logging.getLogger(__name__)
+
+generate = None
+predict = None
+rank = None
+lab = None
+
 try:
-    from src.backend.api.v1 import generate, predict, rank, lab
+    from src.backend.api.v1 import generate
+    logger.info("Successfully imported generate router")
 except Exception as e:
-    import logging
-    logging.error(f"Failed to import API routers: {e}")
-    generate = predict = rank = lab = None
+    logger.error(f"Failed to import generate router: {e}")
+
+try:
+    from src.backend.api.v1 import predict
+    logger.info("Successfully imported predict router")
+except Exception as e:
+    logger.error(f"Failed to import predict router: {e}")
+
+try:
+    from src.backend.api.v1 import rank
+    logger.info("Successfully imported rank router")
+except Exception as e:
+    logger.error(f"Failed to import rank router: {e}")
+
+try:
+    from src.backend.api.v1 import lab
+    logger.info("Successfully imported lab router")
+except Exception as e:
+    logger.error(f"Failed to import lab router: {e}")
 
 from src.backend.websockets import visualization
 
@@ -51,7 +76,13 @@ async def root():
         "message": "Welcome to DiffuCat API",
         "docs": "/docs",
         "health": "/health",
-        "version": config.api.version
+        "version": config.api.version,
+        "routers": {
+            "generate": generate is not None,
+            "predict": predict is not None,
+            "rank": rank is not None,
+            "lab": lab is not None
+        }
     }
 
 @app.get("/health")

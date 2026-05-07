@@ -26,7 +26,7 @@ class GenerateResponse(BaseModel):
     candidates: List[str]
     message: str
 
-@router.post("/", response_model=GenerateResponse)
+@router.post("", response_model=GenerateResponse)
 async def generate_candidates(
     request: GenerateRequest,
     pipeline: DiffuCatPipeline = Depends(get_pipeline),

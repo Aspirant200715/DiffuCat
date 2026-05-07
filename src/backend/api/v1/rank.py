@@ -21,7 +21,7 @@ class RankedCandidate(PredictionResult):
 class RankResponse(BaseModel):
     ranked_candidates: List[RankedCandidate]
 
-@router.post("/", response_model=RankResponse)
+@router.post("", response_model=RankResponse)
 async def rank_candidates(
     request: RankRequest,
     pipeline: DiffuCatPipeline = Depends(get_pipeline),
